@@ -1,23 +1,15 @@
 from django.db import models
 from django.utils.text import slugify
 
-from common.models import TimeStampedModel
+from common.models import TimeStampedModel, DifficultyModel
 from exercise.models import Exercise
 
 
-class WorkoutPlan(TimeStampedModel):
-    class DifficultyChoices(models.TextChoices):
-        EASY = 'Easy', 'Easy'
-        MEDIUM = 'Medium', 'Medium'
-        HARD = 'Hard', 'Hard'
-
+class WorkoutPlan(TimeStampedModel ,DifficultyModel):
     name = models.CharField(max_length=100)
 
     notes = models.TextField(blank=True,
                              null=True)
-
-    difficulty = models.CharField(max_length=10,
-                                  choices=DifficultyChoices.choices,)
 
     slug = models.SlugField(
         max_length=150,

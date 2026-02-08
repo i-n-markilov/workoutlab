@@ -30,6 +30,10 @@ ALLOWED_HOSTS = []
 
 # Application definition
 PROJECT_APPS = [
+    'common',
+    'equipment',
+    'exercise',
+    'workout',
 
 ]
 

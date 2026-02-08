@@ -1,10 +1,11 @@
 from django.db import models
 from django.utils.text import slugify
 
-from common.models import TimeStampedModel
+from common.models import TimeStampedModel, DifficultyModel
+from equipment.models import Equipment
 
 
-class Exercise(TimeStampedModel):
+class Exercise(TimeStampedModel, DifficultyModel):
     class MuscleGroup(models.TextChoices):
         CHEST = 'Chest', 'Chest'
         BACK = 'Back', 'Back'
@@ -25,10 +26,9 @@ class Exercise(TimeStampedModel):
                                                null=True,)
 
     equipment = models.ManyToManyField(
-        'Equipment',
+        Equipment,
         related_name='exercises',
         blank=True,
-        null=True,
     )
 
     is_bodyweight = models.BooleanField(default=False)
