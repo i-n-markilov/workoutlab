@@ -1,10 +1,30 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
+{% extends 'shared/base.html' %}
+{% load static %}
 
-</body>
-</html>
+{% block title %}
+    Edit Equipment
+{% endblock %}
+
+{% block content %}
+    <h1 class='text-3xl font-bold text-gray-900 mb-6'>Edit Equipment</h1>
+
+    <div class='bg-white p-6 rounded-lg shadow-md'>
+        <form method='post'>
+            {% csrf_token %}
+            {% for field in form %}
+                <div class='mb-4'>
+                    <label for='{{ field.id_for_label }}' class='block text-sm font-medium text-gray-700 mb-1'>{{ field.label }}</label>
+                    {{ field }}
+                </div>
+            {% endfor %}
+            <div class='mt-6 flex justify-end'>
+                <button type='submit' class='bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-lg shadow transition duration-300 ease-in-out'>
+                    Save Changes
+                </button>
+                <a href='{% url 'equipment:details' equipment_item.id %}' class='ml-4 text-gray-600 hover:text-gray-800 py-2 px-4 rounded-lg'>
+                    Cancel
+                </a>
+            </div>
+        </form>
+    </div>
+{% endblock content %}

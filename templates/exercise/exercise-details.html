@@ -1,10 +1,39 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
+{% extends 'shared/base.html' %}
+{% load static %}
 
-</body>
-</html>
+{% block title %}
+    {{ exercise.name }} Details
+{% endblock %}
+
+{% block content %}
+    <div class='flex justify-between items-center mb-6'>
+        <h1 class='text-3xl font-bold text-gray-900'>{{ exercise.name }}</h1>
+        <div class='flex space-x-2'>
+            <a href='{% url 'exercise:edit' exercise.id %}' class='bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-4 rounded-lg shadow transition duration-300 ease-in-out'>
+                Edit
+            </a>
+            <a href='{% url 'exercise:delete' exercise.id %}' class='bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded-lg shadow transition duration-300 ease-in-out'>
+                Delete
+            </a>
+        </div>
+    </div>
+
+    <div class='bg-white p-6 rounded-lg shadow-md'>
+        <h2 class='text-xl font-semibold text-gray-800 mb-4'>Details</h2>
+        <p class='text-gray-700 mb-2'><strong>Name:</strong> {{ exercise.name }}</p>
+        <p class='text-gray-700 mb-2'><strong>Description:</strong> {{ exercise.description }}</p>
+        <p class='text-gray-700 mb-2'><strong>Primary Muscle Group:</strong> {{ exercise.get_primary_muscle_group_display }}</p>
+        <p class='text-gray-700 mb-2'><strong>Secondary Muscle Group:</strong> {{ exercise.get_secondary_muscle_group_display }}</p>
+        <p class='text-gray-700 mb-2'><strong>Difficulty:</strong> {{ exercise.get_difficulty_display }}</p>
+        <p class='text-gray-700 mb-2'><strong>Bodyweight:</strong> {% if exercise.is_bodyweight %}Yes{% else %}No{% endif %}</p>
+        {% if exercise.equipment.all %}
+            <p class='text-gray-700 mb-2'><strong>Equipment:</strong>
+                {% for eq in exercise.equipment.all %}
+                    <span class='inline-block bg-gray-200 rounded-full px-3 py-1 text-sm font-semibold text-gray-700 mr-2 mb-2'>{{ eq.name }}</span>
+                {% endfor %}
+            </p>
+        {% endif %}
+        <p class='text-gray-700 mb-2'><strong>Added:</strong> {{ exercise.created|date:'M d, Y' }}</p>
+        <p class='text-gray-700 mb-2'><strong>Last Updated:</strong> {{ exercise.modified|date:'M d, Y' }}</p>
+    </div>
+{% endblock content %}

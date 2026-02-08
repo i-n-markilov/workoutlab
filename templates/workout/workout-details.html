@@ -1,10 +1,43 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
+{% extends 'shared/base.html' %}
+{% load static %}
 
-</body>
-</html>
+{% block title %}
+    {{ workout_plan.name }} Details
+{% endblock %}
+
+{% block content %}
+    <div class='flex justify-between items-center mb-6'>
+        <h1 class='text-3xl font-bold text-gray-900'>{{ workout_plan.name }}</h1>
+        <div class='flex space-x-2'>
+            <a href='{% url 'workout:edit' workout_plan.id %}' class='bg-purple-500 hover:bg-purple-600 text-white font-bold py-2 px-4 rounded-lg shadow transition duration-300 ease-in-out'>
+                Edit
+            </a>
+            <a href='{% url 'workout:delete' workout_plan.id %}' class='bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded-lg shadow transition duration-300 ease-in-out'>
+                Delete
+            </a>
+        </div>
+    </div>
+
+    <div class='bg-white p-6 rounded-lg shadow-md'>
+        <h2 class='text-xl font-semibold text-gray-800 mb-4'>Details</h2>
+        <p class='text-gray-700 mb-2'><strong>Name:</strong> {{ workout_plan.name }}</p>
+        <p class='text-gray-700 mb-2'><strong>Description:</strong> {{ workout_plan.description }}</p>
+        <p class='text-gray-700 mb-2'><strong>Difficulty:</strong> {{ workout_plan.get_difficulty_display }}</p>
+        <p class='text-gray-700 mb-2'><strong>Added:</strong> {{ workout_plan.created_at|date:'M d, Y' }}</p>
+        <p class='text-gray-700 mb-2'><strong>Last Updated:</strong> {{ workout_plan.updated_at|date:'M d, Y' }}</p>
+    
+        {% if workout_plan.workoutexercise_set.all %}
+            <h3 class='text-lg font-semibold text-gray-800 mt-4 mb-2'>Exercises:</h3>
+            <ul class='list-disc list-inside ml-4'>
+                {% for we in workout_plan.workoutexercise_set.all %}
+                    <li class='text-gray-700 mb-1'>
+                        <a href='{% url 'exercise:details' we.exercise.id %}' class='text-blue-600 hover:underline'>{{ we.exercise.name }}</a>
+                        - {{ we.sets }} sets of {{ we.repetitions }} reps with {{ we.weight }} kg
+                    </li>
+                {% endfor %}
+            </ul>
+        {% else %}
+            <p class='text-gray-600 mt-4'>No exercises added to this workout plan yet.</p>
+        {% endif %}
+    </div>
+{% endblock content %}

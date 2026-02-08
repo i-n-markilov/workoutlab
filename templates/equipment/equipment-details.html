@@ -1,10 +1,29 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
+{% extends 'shared/base.html' %}
+{% load static %}
 
-</body>
-</html>
+{% block title %}
+    {{ equipment.name }} Details
+{% endblock %}
+
+{% block content %}
+    <div class='flex justify-between items-center mb-6'>
+        <h1 class='text-3xl font-bold text-gray-900'>{{ equipment_item.name }}</h1>
+        <div class='flex space-x-2'>
+            <a href='{% url 'equipment:edit' equipment_item.pk %}' class='bg-orange-300 hover:bg-orange-400 text-white font-bold py-2 px-4 rounded-lg shadow transition duration-300 ease-in-out'>
+                Edit
+            </a>
+            <a href='{% url 'equipment:delete' equipment_item.pk %}' class='bg-red-400 hover:bg-red-500 text-white font-bold py-2 px-4 rounded-lg shadow transition duration-300 ease-in-out'>
+                Delete
+            </a>
+        </div>
+    </div>
+
+    <div class='bg-white p-6 rounded-lg shadow-md'>
+        <h2 class='text-xl font-semibold text-gray-800 mb-4'>Details</h2>
+        <p class='text-gray-700 mb-2'><strong>Name:</strong> {{ equipment_item.name }}</p>
+        <p class='text-gray-700 mb-2'><strong>Description:</strong> {{ equipment_item.description }}</p>
+        <p class='text-gray-700 mb-2'><strong>Type:</strong> {{ equipment_item.type }}</p>
+        <p class='text-gray-700 mb-2'><strong>Added:</strong> {{ equipment_item.created|date:'M d, Y' }}</p>
+        <p class='text-gray-700 mb-2'><strong>Last Updated:</strong> {{ equipment_item.modified|date:'M d, Y' }}</p>
+    </div>
+{% endblock content %}
