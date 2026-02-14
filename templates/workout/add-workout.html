@@ -11,11 +11,15 @@
     <div class='bg-white p-6 rounded-lg shadow-md'>
         <form method='post'>
             {% csrf_token %}
-            {% for field in form %}
+            {% for field in workout_form %}
                 <div class='mb-4'>
                     <label for='{{ field.id_for_label }}' class='block text-sm font-medium text-gray-700 mb-1'>{{ field.label }}</label>
                     {{ field }}
                 </div>
+            {% endfor %}
+            {{ formset.management_form}}
+            {% for form in formset %}
+                {{ form }}
             {% endfor %}
             <div class='mt-6 flex justify-end'>
                 <button type='submit' class='bg-purple-600 hover:bg-purple-700 text-white font-bold py-2 px-4 rounded-lg shadow transition duration-300 ease-in-out'>

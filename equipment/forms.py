@@ -13,6 +13,3 @@ class EquipmentCreateForm(EquipmentFormBasic):
 
 class EquipmentEditForm(EquipmentFormBasic):
     ...
-
-class EquipmentDeleteForm(EquipmentFormBasic):
-    ...

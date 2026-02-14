@@ -12,5 +12,5 @@ workout_patterns =[
 urlpatterns = [
     path('', views.workout_list, name='list'),
     path('add-workout/', views.add_workout, name='add'),
-    path('<int:pk>/', include(workout_patterns)),
+    path('<int:pk>/<slug:slug>/', include(workout_patterns)),
 ]

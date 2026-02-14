@@ -19,6 +19,7 @@ def add_exercise(request: HttpRequest) -> HttpResponse:
 
 def delete_exercise(request: HttpRequest, pk: int, slug: str) -> HttpResponse:
     exercise = get_object_or_404(Exercise, pk=pk, slug=slug)
+
     if request.method == 'POST':
         exercise.delete()
         return redirect('exercise:list')

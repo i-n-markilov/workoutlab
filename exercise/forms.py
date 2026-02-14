@@ -13,6 +13,3 @@ class ExerciseCreateForm(ExerciseFormBasic):
 
 class ExerciseEditForm(ExerciseFormBasic):
     ...
-
-class ExerciseDeleteForm(ExerciseFormBasic):
-    ...
