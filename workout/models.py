@@ -1,11 +1,11 @@
 from django.db import models
 from django.utils.text import slugify
 
-from common.models import TimeStampedModel, DifficultyModel
+from common.models import TimeStampedModel
 from exercise.models import Exercise
 
 
-class WorkoutPlan(TimeStampedModel ,DifficultyModel):
+class WorkoutPlan(TimeStampedModel):
     name = models.CharField(max_length=100)
 
     notes = models.TextField(blank=True,
@@ -19,8 +19,12 @@ class WorkoutPlan(TimeStampedModel ,DifficultyModel):
     )
 
     def save(self, *args, **kwargs) -> None:
-        if not self.slug:
-            self.slug = slugify(f"{self.name}")
+        if self.pk:
+            old_instance = WorkoutPlan.objects.get(pk=self.pk)
+            if old_instance.name != self.name:
+                self.slug = slugify(self.name)
+        else:
+            self.slug = slugify(self.name)
 
         super().save(*args, **kwargs)
 

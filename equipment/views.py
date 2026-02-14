@@ -17,16 +17,18 @@ def add_equipment(request: HttpRequest) -> HttpResponse:
 
     return render(request, 'equipment/add-equipment.html', context)
 
-def delete_equipment(request: HttpRequest, pk: int) -> HttpResponse:
-    equipment_item = get_object_or_404(Equipment, pk=pk)
+def delete_equipment(request: HttpRequest, pk: int, slug: str) -> HttpResponse:
+    equipment_item = get_object_or_404(Equipment, pk=pk, slug=slug)
     if request.method == 'POST':
         equipment_item.delete()
         return redirect('equipment:list')
+
     context = {'equipment_item': equipment_item}
+
     return render(request, 'equipment/delete-equipment.html', context)
 
-def edit_equipment(request: HttpRequest, pk: int) -> HttpResponse:
-    equipment_item = get_object_or_404(Equipment, pk=pk)
+def edit_equipment(request: HttpRequest, pk: int, slug: str) -> HttpResponse:
+    equipment_item = get_object_or_404(Equipment, pk=pk, slug=slug)
     form = EquipmentEditForm(request.POST or None, instance=equipment_item)
 
     if request.method== 'POST' and form.is_valid():
@@ -44,8 +46,8 @@ def equipment_list(request: HttpRequest) -> HttpResponse:
 
     return render(request, 'equipment/equipment-list.html', context)
 
-def equipment_details(request: HttpRequest, pk: int) -> HttpResponse:
-    equipment_item = get_object_or_404(Equipment, pk=pk)
+def equipment_details(request: HttpRequest, pk: int, slug: str) -> HttpResponse:
+    equipment_item = get_object_or_404(Equipment, pk=pk, slug=slug)
 
     context = {'equipment_item': equipment_item}
 

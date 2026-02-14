@@ -12,5 +12,5 @@ exercise_patterns =[
 urlpatterns = [
     path('', views.exercise_list, name='list'),
     path('add-exercise/', views.add_exercise, name='add'),
-    path('<int:pk>/', include(exercise_patterns)),
+    path('<int:pk>/<slug:slug>/', include(exercise_patterns)),
 ]

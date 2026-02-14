@@ -12,5 +12,5 @@ equipment_patterns =[
 urlpatterns = [
     path('', views.equipment_list, name='list'),
     path('add-equipment/', views.add_equipment, name='add'),
-    path('<int:pk>/', include(equipment_patterns)),
+    path('<int:pk>/<slug:slug>/', include(equipment_patterns)),
 ]

@@ -13,8 +13,8 @@ class WorkoutExerciseInline(admin.TabularInline):
 
 @admin.register(WorkoutPlan)
 class WorkoutPlanAdmin(admin.ModelAdmin):
-    list_display = ('name', 'difficulty', 'notes')
-    list_filter = ('name', 'difficulty', 'items__exercise__name')
+    list_display = ('name', 'notes')
+    list_filter = ('name', 'items__exercise__name')
     search_fields = ('name',)
     inlines = [WorkoutExerciseInline]
 

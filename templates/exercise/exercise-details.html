@@ -9,10 +9,10 @@
     <div class='flex justify-between items-center mb-6'>
         <h1 class='text-3xl font-bold text-gray-900'>{{ exercise.name }}</h1>
         <div class='flex space-x-2'>
-            <a href='{% url 'exercise:edit' exercise.id %}' class='bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-4 rounded-lg shadow transition duration-300 ease-in-out'>
+            <a href='{% url 'exercise:edit' exercise.pk exercise.slug %}' class='bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-4 rounded-lg shadow transition duration-300 ease-in-out'>
                 Edit
             </a>
-            <a href='{% url 'exercise:delete' exercise.id %}' class='bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded-lg shadow transition duration-300 ease-in-out'>
+            <a href='{% url 'exercise:delete' exercise.pk exercise.slug %}' class='bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded-lg shadow transition duration-300 ease-in-out'>
                 Delete
             </a>
         </div>

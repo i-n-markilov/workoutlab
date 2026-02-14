@@ -14,7 +14,13 @@
     </div>
 
     <div class='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6'>
-        {# add exercise cards #}
+        {% for exercise in exercises %}
+            <a href='{% url 'exercise:details' exercise.pk exercise.slug%}' class='block bg-white p-6 rounded-lg shadow-md hover:shadow-lg transition duration-300 ease-in-out'>
+                <h2 class='text-xl font-semibold text-gray-800 mb-2'>{{ exercise.name }}</h2>
+                <p class='text-gray-600'>{{ exercise.description|truncatechars:100 }}</p>
+            </a>
+        {% empty %}
         <p class='col-span-full text-center text-gray-600'>No exercises added yet.</p>
+        {% endfor %}
     </div>
 {% endblock content %}

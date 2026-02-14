@@ -26,8 +26,12 @@ class Equipment(TimeStampedModel):
     )
 
     def save(self, *args, **kwargs) -> None:
-        if not self.slug:
-            self.slug = slugify(f"{self.name}")
+        if self.pk:
+            old_instance = Equipment.objects.get(pk=self.pk)
+            if old_instance.name != self.name:
+                self.slug = slugify(self.name)
+        else:
+            self.slug = slugify(self.name)
 
         super().save(*args, **kwargs)
 
