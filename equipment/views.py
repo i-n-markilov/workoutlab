@@ -40,7 +40,7 @@ def edit_equipment(request: HttpRequest, pk: int, slug: str) -> HttpResponse:
     return render(request, 'equipment/edit-equipment.html', context)
 
 def equipment_list(request: HttpRequest) -> HttpResponse:
-    equipment_items = Equipment.objects.all()
+    equipment_items = Equipment.objects.all().order_by('name', 'created')
 
     context = {'equipment_items': equipment_items}
 

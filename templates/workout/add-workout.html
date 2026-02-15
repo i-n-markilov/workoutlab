@@ -1,5 +1,6 @@
 {% extends 'shared/base.html' %}
 {% load static %}
+{% load tailwind_filters %}
 
 {% block title %}
     Add Workout Plan
@@ -9,18 +10,28 @@
     <h1 class='text-3xl font-bold text-gray-900 mb-6'>Create New Workout Plan</h1>
 
     <div class='bg-white p-6 rounded-lg shadow-md'>
-        <form method='post'>
+        <form method='post' novalidate>
             {% csrf_token %}
             {% for field in workout_form %}
                 <div class='mb-4'>
-                    <label for='{{ field.id_for_label }}' class='block text-sm font-medium text-gray-700 mb-1'>{{ field.label }}</label>
-                    {{ field }}
+                    {{ field|as_crispy_field }}
                 </div>
             {% endfor %}
             {{ formset.management_form}}
-            {% for form in formset %}
-                {{ form }}
-            {% endfor %}
+            <table class="min-w-full border border-gray-200 rounded-lg">
+              <tbody>
+                {% for form in formset %}
+                  <tr class="border-b">
+                    <td>{{ form.exercise|as_crispy_field}}</td>
+                    <td>{{ form.order|as_crispy_field }}</td>
+                    <td>{{ form.sets|as_crispy_field }}</td>
+                    <td>{{ form.reps|as_crispy_field }}</td>
+                    <td>{{ form.duration_seconds|as_crispy_field }}</td>
+                    <td>{{ form.rest_seconds|as_crispy_field }}</td>
+                  </tr>
+                {% endfor %}
+              </tbody>
+            </table>
             <div class='mt-6 flex justify-end'>
                 <button type='submit' class='bg-purple-600 hover:bg-purple-700 text-white font-bold py-2 px-4 rounded-lg shadow transition duration-300 ease-in-out'>
                     Create Workout Plan

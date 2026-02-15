@@ -1,7 +1,7 @@
 from django.http import HttpRequest, HttpResponse
 from django.shortcuts import render, redirect, get_object_or_404
 
-from workout.forms import WorkoutPlanEditForm, WorkoutPlanCreateForm, WorkoutExerciseFormSet
+from workout.forms import WorkoutPlanEditForm, WorkoutPlanCreateForm, dynamic_workout_formset
 from workout.models import WorkoutPlan
 
 
@@ -9,7 +9,8 @@ from workout.models import WorkoutPlan
 def add_workout(request: HttpRequest) -> HttpResponse:
     if request.method == "POST":
         workout_form = WorkoutPlanCreateForm(request.POST)
-        formset = WorkoutExerciseFormSet(request.POST)
+        formset_class = dynamic_workout_formset()
+        formset = formset_class(request.POST)
 
         if workout_form.is_valid() and formset.is_valid():
             workout= workout_form.save()
@@ -19,7 +20,8 @@ def add_workout(request: HttpRequest) -> HttpResponse:
 
     else:
         workout_form = WorkoutPlanCreateForm()
-        formset = WorkoutExerciseFormSet()
+        formset_class = dynamic_workout_formset()
+        formset = formset_class()
 
     context = {'workout_form': workout_form, 'formset': formset}
 
@@ -38,10 +40,12 @@ def delete_workout(request: HttpRequest, pk: int, slug:str) -> HttpResponse:
 
 def edit_workout(request: HttpRequest, pk: int, slug:str) -> HttpResponse:
     workout_plan = get_object_or_404(WorkoutPlan, pk=pk, slug=slug)
+    formset_class = dynamic_workout_formset(workout_plan)
+
 
     if request.method == "POST":
         workout_form = WorkoutPlanEditForm(request.POST, instance=workout_plan)
-        formset = WorkoutExerciseFormSet(request.POST, instance=workout_plan)
+        formset = formset_class(request.POST)
 
         if workout_form.is_valid() and formset.is_valid():
             workout = workout_form.save()
@@ -50,7 +54,7 @@ def edit_workout(request: HttpRequest, pk: int, slug:str) -> HttpResponse:
             return redirect('workout:list')
     else:
         workout_form = WorkoutPlanEditForm(instance=workout_plan)
-        formset = WorkoutExerciseFormSet(instance=workout_plan)
+        formset = formset_class(instance=workout_plan)
 
     context = {
         'workout_form': workout_form, 'formset': formset, 'workout_plan': workout_plan,

@@ -1,35 +1,16 @@
 from django.db import models
-from django.utils.text import slugify
 
-from common.models import TimeStampedModel
+from common.models import TimeStampedModel, NameSlugModel
 from exercise.models import Exercise
 
 
-class WorkoutPlan(TimeStampedModel):
-    name = models.CharField(max_length=100)
+class WorkoutPlan(TimeStampedModel, NameSlugModel):
 
     notes = models.TextField(blank=True,
                              null=True)
 
-    slug = models.SlugField(
-        max_length=150,
-        unique=True,
-        blank=True,
-        null=True,
-    )
 
-    def save(self, *args, **kwargs) -> None:
-        if self.pk:
-            old_instance = WorkoutPlan.objects.get(pk=self.pk)
-            if old_instance.name != self.name:
-                self.slug = slugify(self.name)
-        else:
-            self.slug = slugify(self.name)
 
-        super().save(*args, **kwargs)
-
-    def __str__(self) -> str:
-        return self.name
 
 class WorkoutExercise(models.Model):
     workout = models.ForeignKey(

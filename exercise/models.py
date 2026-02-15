@@ -1,11 +1,10 @@
 from django.db import models
-from django.utils.text import slugify
 
-from common.models import TimeStampedModel
+from common.models import TimeStampedModel, NameSlugModel
 from equipment.models import Equipment
 
 
-class Exercise(TimeStampedModel):
+class Exercise(TimeStampedModel, NameSlugModel):
     class MuscleGroup(models.TextChoices):
         CHEST = 'Chest', 'Chest'
         BACK = 'Back', 'Back'
@@ -18,9 +17,6 @@ class Exercise(TimeStampedModel):
         EASY = 'Easy', 'Easy'
         MEDIUM = 'Medium', 'Medium'
         HARD = 'Hard', 'Hard'
-
-    name = models.CharField(max_length=100,
-                            unique=True)
 
     difficulty = models.CharField(max_length=10,
                                   choices=DifficultyChoices.choices,)
@@ -44,24 +40,3 @@ class Exercise(TimeStampedModel):
     )
 
     is_bodyweight = models.BooleanField(default=False)
-
-    slug = models.SlugField(
-        max_length=150,
-        unique=True,
-        blank=True,
-        null=True,
-    )
-
-    def save(self, *args, **kwargs) -> None:
-        if self.pk:
-            old_instance = Exercise.objects.get(pk=self.pk)
-            if old_instance.name != self.name:
-                self.slug = slugify(self.name)
-        else:
-            self.slug = slugify(self.name)
-
-        super().save(*args, **kwargs)
-
-    def __str__(self):
-        return self.name
-

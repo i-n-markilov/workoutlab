@@ -41,7 +41,7 @@ def edit_exercise(request: HttpRequest, pk: int, slug: str) -> HttpResponse:
     return render(request, 'exercise/edit-exercise.html', context)
 
 def exercise_list(request: HttpRequest) -> HttpResponse:
-    exercises = Exercise.objects.all()
+    exercises = Exercise.objects.all().order_by('name', 'created')
 
     context = {'exercises': exercises}
     return render(request, 'exercise/exercise-list.html', context)

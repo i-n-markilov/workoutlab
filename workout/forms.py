@@ -6,25 +6,44 @@ from workout.models import WorkoutPlan, WorkoutExercise
 
 class WorkoutPlanFormBasic(forms.ModelForm):
     class Meta:
-        exclude = ['slug',]
+        fields = '__all__'
         model = WorkoutPlan
 
 class WorkoutPlanCreateForm(WorkoutPlanFormBasic):
-    ...
+    class Meta(WorkoutPlanFormBasic.Meta):
+        exclude = ['slug',]
+        help_texts = {
+            'name': 'Add workout plan name',
+            'notes': 'Add some helpful notes',
+        }
 
 class WorkoutPlanEditForm(WorkoutPlanFormBasic):
-    ...
+    class Meta(WorkoutPlanFormBasic.Meta):
+        widgets = {
+            'slug': forms.TextInput(attrs={'disabled': True})
+        }
 
 class WorkoutExerciseForm(forms.ModelForm):
-    model = WorkoutExercise
+    class Meta:
+        model = WorkoutExercise
+        fields = ['exercise', 'order', 'sets', 'reps', 'duration_seconds', 'rest_seconds']
 
-    fields = ['exercise', 'order', 'sets', 'reps', 'duration_seconds', 'rest_seconds' ]
 
-WorkoutExerciseFormSet = inlineformset_factory(
-    WorkoutPlan,
-    WorkoutExercise,
-    exclude=['slug'],
-    form = WorkoutExerciseForm,
-    extra = 6,
-    can_delete = True,
-)
+
+TOTAL_FORMS_COUNT = 6
+
+def dynamic_workout_formset(instance=None, total_forms = TOTAL_FORMS_COUNT):
+    existing_exercises = 0
+    if instance:
+        existing_exercises = instance.items.count()
+
+    additional_forms = max(total_forms - existing_exercises, 0)
+
+    return inlineformset_factory(
+        WorkoutPlan,
+        WorkoutExercise,
+        form=WorkoutExerciseForm,
+        exclude=['slug'],
+        can_delete=True,
+        extra=additional_forms,
+    )
