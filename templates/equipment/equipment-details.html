@@ -6,7 +6,7 @@
 {% endblock %}
 
 {% block content %}
-    <div class='flex justify-between items-center mb-6'>
+    <div class='flex justify-between items-center mb-10'>
         <h1 class='text-3xl font-bold text-gray-900'>{{ equipment_item.name }}</h1>
         <div class='flex space-x-2'>
             <a href='{% url 'equipment:edit' equipment_item.pk equipment_item.slug%}' class='bg-orange-300 hover:bg-orange-400 text-white font-bold py-2 px-4 rounded-lg shadow transition duration-300 ease-in-out'>

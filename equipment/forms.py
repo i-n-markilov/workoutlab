@@ -1,5 +1,8 @@
+from email.policy import default
+
 from django import forms
 
+from common.forms import NameSearchForm
 from equipment.models import Equipment
 
 
@@ -25,3 +28,7 @@ class EquipmentEditForm(EquipmentFormBasic):
         widgets = {
             'slug': forms.TextInput(attrs={'disabled': True})
         }
+
+
+class EquipmentSearchForm(NameSearchForm):
+    ...

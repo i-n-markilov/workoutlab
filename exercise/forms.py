@@ -1,5 +1,6 @@
 from django import forms
 
+from common.forms import NameSearchForm
 from exercise.models import Exercise
 
 
@@ -27,3 +28,6 @@ class ExerciseEditForm(ExerciseFormBasic):
         widgets = {
             'slug': forms.TextInput(attrs={'disabled': True})
         }
+
+class ExerciseSearchForm(NameSearchForm):
+    ...

@@ -1,6 +1,7 @@
 from django import forms
 from django.forms.models import inlineformset_factory
 
+from common.forms import NameSearchForm
 from workout.models import WorkoutPlan, WorkoutExercise
 
 
@@ -47,3 +48,6 @@ def dynamic_workout_formset(instance=None, total_forms = TOTAL_FORMS_COUNT):
         can_delete=True,
         extra=additional_forms,
     )
+
+class WorkoutPlanSearchForm(NameSearchForm):
+    ...

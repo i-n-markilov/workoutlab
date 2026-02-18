@@ -1,7 +1,7 @@
 from django.http import HttpRequest, HttpResponse
 from django.shortcuts import render, redirect, get_object_or_404
 
-from workout.forms import WorkoutPlanEditForm, WorkoutPlanCreateForm, dynamic_workout_formset
+from workout.forms import WorkoutPlanEditForm, WorkoutPlanCreateForm, dynamic_workout_formset, WorkoutPlanSearchForm
 from workout.models import WorkoutPlan
 
 
@@ -63,9 +63,16 @@ def edit_workout(request: HttpRequest, pk: int, slug:str) -> HttpResponse:
     return render(request, 'workout/edit-workout.html', context)
 
 def workout_list(request: HttpRequest) -> HttpResponse:
+    search_form = WorkoutPlanSearchForm(request.GET or None)
+
     workout_plans = WorkoutPlan.objects.all()
 
-    context = {'workout_plans': workout_plans}
+    if request.GET:
+        if search_form.is_valid():
+            workout_plans = workout_plans.filter(name__contains=search_form.cleaned_data['query'])
+
+    context = {'workout_plans': workout_plans,
+               'search_form': search_form}
 
     return render(request, 'workout/workout-list.html', context)
 

@@ -1,7 +1,7 @@
 from django.http import HttpRequest, HttpResponse
 from django.shortcuts import render, get_object_or_404, redirect
 
-from equipment.forms import EquipmentCreateForm, EquipmentEditForm
+from equipment.forms import EquipmentCreateForm, EquipmentEditForm, EquipmentSearchForm
 from equipment.models import Equipment
 
 
@@ -40,9 +40,16 @@ def edit_equipment(request: HttpRequest, pk: int, slug: str) -> HttpResponse:
     return render(request, 'equipment/edit-equipment.html', context)
 
 def equipment_list(request: HttpRequest) -> HttpResponse:
+    search_form = EquipmentSearchForm(request.GET or None)
+
     equipment_items = Equipment.objects.all().order_by('name', 'created')
 
-    context = {'equipment_items': equipment_items}
+    if request.GET:
+        if search_form.is_valid():
+            equipment_items = equipment_items.filter(name__icontains=search_form.cleaned_data['query'])
+
+    context = {'equipment_items': equipment_items,
+               'search_form': search_form}
 
     return render(request, 'equipment/equipment-list.html', context)
 

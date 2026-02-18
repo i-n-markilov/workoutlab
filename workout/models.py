@@ -9,9 +9,6 @@ class WorkoutPlan(TimeStampedModel, NameSlugModel):
     notes = models.TextField(blank=True,
                              null=True)
 
-
-
-
 class WorkoutExercise(models.Model):
     workout = models.ForeignKey(
         WorkoutPlan,
