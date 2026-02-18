@@ -11,7 +11,7 @@
 
         {% include 'shared/name-search-form.html' %}
 
-        <a href='{% url 'exercise:add' %}' class='bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-4 rounded-lg shadow transition duration-300 ease-in-out'>
+        <a href='{% url 'exercise:add' %}' class='{{ button_class }} text-white font-bold py-2 px-4 rounded-lg shadow transition duration-300 ease-in-out'>
             Add Exercise
         </a>
     </div>
@@ -26,4 +26,7 @@
         <p class='col-span-full text-center text-gray-600'>No exercises added yet.</p>
         {% endfor %}
     </div>
+
+    {% include 'shared/pagination.html' %}
+
 {% endblock content %}

@@ -1,5 +1,6 @@
 from django.http import HttpRequest, HttpResponse
 from django.shortcuts import render, get_object_or_404, redirect
+from django.views.generic import ListView
 
 from equipment.forms import EquipmentCreateForm, EquipmentEditForm, EquipmentSearchForm
 from equipment.models import Equipment
@@ -39,19 +40,29 @@ def edit_equipment(request: HttpRequest, pk: int, slug: str) -> HttpResponse:
 
     return render(request, 'equipment/edit-equipment.html', context)
 
-def equipment_list(request: HttpRequest) -> HttpResponse:
-    search_form = EquipmentSearchForm(request.GET or None)
 
-    equipment_items = Equipment.objects.all().order_by('name', 'created')
+class EquipmentListView(ListView):
+    model = Equipment
+    context_object_name = 'equipment_items'
+    template_name = 'equipment/equipment-list.html'
+    paginate_by = 9
 
-    if request.GET:
-        if search_form.is_valid():
-            equipment_items = equipment_items.filter(name__icontains=search_form.cleaned_data['query'])
+    def get_queryset(self):
+        queryset = super().get_queryset().order_by('name','-created')
 
-    context = {'equipment_items': equipment_items,
-               'search_form': search_form}
+        form = EquipmentSearchForm(self.request.GET)
+        if form.is_valid():
+            name = self.request.GET.get('name')
+            if name:
+                queryset = queryset.filter(name__icontains=name)
 
-    return render(request, 'equipment/equipment-list.html', context)
+        return queryset
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['search_form'] = EquipmentSearchForm(self.request.GET)
+        context['button_class'] = 'bg-blue-600 hover:bg-blue-700'
+        return context
 
 def equipment_details(request: HttpRequest, pk: int, slug: str) -> HttpResponse:
     equipment_item = get_object_or_404(Equipment, pk=pk, slug=slug)

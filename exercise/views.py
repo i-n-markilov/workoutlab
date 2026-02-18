@@ -1,5 +1,7 @@
+from django.db.models import QuerySet
 from django.http import HttpRequest, HttpResponse
 from django.shortcuts import render, redirect, get_object_or_404
+from django.views.generic import ListView
 
 from exercise.forms import ExerciseCreateForm, ExerciseEditForm, ExerciseSearchForm
 from exercise.models import Exercise
@@ -40,19 +42,28 @@ def edit_exercise(request: HttpRequest, pk: int, slug: str) -> HttpResponse:
 
     return render(request, 'exercise/edit-exercise.html', context)
 
-def exercise_list(request: HttpRequest) -> HttpResponse:
-    search_form = ExerciseSearchForm(request.GET or None)
+class ExerciseListView(ListView):
+    model = Exercise
+    context_object_name = 'exercises'
+    template_name = 'exercise/exercise-list.html'
+    paginate_by = 9
 
-    exercises = Exercise.objects.all().order_by('name', 'created')
+    def get_queryset(self):
+        queryset = super().get_queryset().order_by('name','-created')
 
-    if request.GET:
-        if search_form.is_valid():
-            exercises = exercises.filter(name__icontains=search_form.cleaned_data['query'])
+        form = ExerciseSearchForm(self.request.GET)
+        if form.is_valid():
+            name= self.request.GET.get('name')
+            if name:
+                queryset = queryset.filter(name__icontains=name)
 
-    context = {'exercises': exercises,
-               'search_form': search_form}
+        return queryset
 
-    return render(request, 'exercise/exercise-list.html', context)
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['search_form'] = ExerciseSearchForm(self.request.GET)
+        context['button_class'] = 'bg-green-600 hover:bg-green-700'
+        return context
 
 def exercise_details(request: HttpRequest, pk: int, slug: str) -> HttpResponse:
     exercise = get_object_or_404(Exercise, pk=pk, slug=slug)

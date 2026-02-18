@@ -10,7 +10,7 @@ workout_patterns =[
 ]
 
 urlpatterns = [
-    path('', views.workout_list, name='list'),
+    path('', views.WorkoutPlanListView.as_view(), name='list'),
     path('add-workout/', views.add_workout, name='add'),
     path('<int:pk>/<slug:slug>/', include(workout_patterns)),
 ]

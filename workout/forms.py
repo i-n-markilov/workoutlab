@@ -1,5 +1,5 @@
 from django import forms
-from django.forms.models import inlineformset_factory
+from django.forms import inlineformset_factory
 
 from common.forms import NameSearchForm
 from workout.models import WorkoutPlan, WorkoutExercise
@@ -33,21 +33,24 @@ class WorkoutExerciseForm(forms.ModelForm):
 
 TOTAL_FORMS_COUNT = 6
 
-def dynamic_workout_formset(instance=None, total_forms = TOTAL_FORMS_COUNT):
-    existing_exercises = 0
-    if instance:
+def dynamic_workout_formset(instance,data=None, total_forms = TOTAL_FORMS_COUNT):
+    if instance.pk:
         existing_exercises = instance.items.count()
+    else:
+        existing_exercises = 0
 
-    additional_forms = max(total_forms - existing_exercises, 0)
+    extra_forms = max(total_forms - existing_exercises, 0)
 
-    return inlineformset_factory(
+
+    WorkoutExerciseFormSet = inlineformset_factory(
         WorkoutPlan,
         WorkoutExercise,
         form=WorkoutExerciseForm,
-        exclude=['slug'],
         can_delete=True,
-        extra=additional_forms,
+        extra=extra_forms,
     )
+
+    return WorkoutExerciseFormSet(data=data, instance=instance)
 
 class WorkoutPlanSearchForm(NameSearchForm):
     ...
