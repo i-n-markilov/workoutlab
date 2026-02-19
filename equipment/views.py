@@ -52,9 +52,9 @@ class EquipmentListView(ListView):
 
         form = EquipmentSearchForm(self.request.GET)
         if form.is_valid():
-            name = self.request.GET.get('name')
-            if name:
-                queryset = queryset.filter(name__icontains=name)
+            q = self.request.GET.get('q')
+            if q:
+                queryset = queryset.filter(name__icontains=q)
 
         return queryset
 
