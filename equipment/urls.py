@@ -4,13 +4,13 @@ from equipment import views
 app_name = 'equipment'
 
 equipment_patterns =[
-    path('', views.equipment_details, name='details'),
-    path('edit/', views.edit_equipment, name='edit'),
-    path('delete/', views.delete_equipment, name='delete'),
+    path('', views.EquipmentDetailView.as_view(), name='details'),
+    path('edit/', views.EquipmentEditView.as_view(), name='edit'),
+    path('delete/', views.EquipmentDeleteView.as_view(), name='delete'),
 ]
 
 urlpatterns = [
     path('', views.EquipmentListView.as_view(), name='list'),
-    path('add-equipment/', views.add_equipment, name='add'),
+    path('add-equipment/', views.EquipmentCreateView.as_view(), name='add'),
     path('<int:pk>/<slug:slug>/', include(equipment_patterns)),
 ]

@@ -1,49 +1,38 @@
-from django.db.models import QuerySet
 from django.http import HttpRequest, HttpResponse
 from django.shortcuts import render, redirect, get_object_or_404
-from django.views.generic import ListView
+from django.urls import reverse, reverse_lazy
+from django.views.generic import ListView, CreateView, DetailView, DeleteView, UpdateView
 
 from exercise.forms import ExerciseCreateForm, ExerciseEditForm, ExerciseSearchForm
 from exercise.models import Exercise
 
+MODEL = Exercise
 
-# Create your views here.
-def add_exercise(request: HttpRequest) -> HttpResponse:
-    form = ExerciseCreateForm(request.POST or None)
+class ExerciseCreateView(CreateView):
+    template_name = 'exercise/add-exercise.html'
+    model = MODEL
+    form_class = ExerciseCreateForm
 
-    if request.method == 'POST' and form.is_valid():
-        form.save()
-        return redirect('exercise:list')
+    def get_success_url(self):
+        return reverse('exercise:details', kwargs={'pk': self.object.pk, 'slug': self.object.slug})
 
-    context = {'form': form}
+class ExerciseDeleteView(DeleteView):
+    model = MODEL
+    template_name = 'exercise/delete-exercise.html'
+    context_object_name = 'exercise'
+    success_url = reverse_lazy('exercise:list')
 
-    return render(request, 'exercise/add-exercise.html', context)
+class ExerciseEditView(UpdateView):
+    model = MODEL
+    form_class = ExerciseEditForm
+    template_name = 'exercise/edit-exercise.html'
+    context_object_name = 'exercise'
 
-def delete_exercise(request: HttpRequest, pk: int, slug: str) -> HttpResponse:
-    exercise = get_object_or_404(Exercise, pk=pk, slug=slug)
-
-    if request.method == 'POST':
-        exercise.delete()
-        return redirect('exercise:list')
-
-    context = {'exercise': exercise}
-
-    return render(request, 'exercise/delete-exercise.html', context)
-
-def edit_exercise(request: HttpRequest, pk: int, slug: str) -> HttpResponse:
-    exercise = get_object_or_404(Exercise, pk=pk, slug=slug)
-    form = ExerciseEditForm(request.POST or None, instance=exercise)
-
-    if request.method == 'POST' and form.is_valid():
-        form.save()
-        return redirect('exercise:list')
-
-    context = {'form': form, 'exercise': exercise}
-
-    return render(request, 'exercise/edit-exercise.html', context)
+    def get_success_url(self):
+        return reverse('exercise:details', kwargs={'pk': self.object.pk, 'slug': self.object.slug})
 
 class ExerciseListView(ListView):
-    model = Exercise
+    model = MODEL
     context_object_name = 'exercises'
     template_name = 'exercise/exercise-list.html'
     paginate_by = 9
@@ -65,9 +54,7 @@ class ExerciseListView(ListView):
         context['button_class'] = 'bg-green-600 hover:bg-green-700'
         return context
 
-def exercise_details(request: HttpRequest, pk: int, slug: str) -> HttpResponse:
-    exercise = get_object_or_404(Exercise, pk=pk, slug=slug)
-
-    context = {'exercise': exercise}
-
-    return render(request, 'exercise/exercise-details.html', context)
+class ExerciseDetailView(DetailView):
+    model = MODEL
+    template_name = 'exercise/exercise-details.html'
+    context_object_name = 'exercise'

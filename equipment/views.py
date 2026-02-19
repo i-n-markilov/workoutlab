@@ -1,48 +1,36 @@
-from django.http import HttpRequest, HttpResponse
-from django.shortcuts import render, get_object_or_404, redirect
-from django.views.generic import ListView
+from django.urls import reverse_lazy, reverse
+from django.views.generic import ListView, CreateView, DetailView, UpdateView, DeleteView
 
 from equipment.forms import EquipmentCreateForm, EquipmentEditForm, EquipmentSearchForm
 from equipment.models import Equipment
 
+MODEL = Equipment
 
-# Create your views here.
-def add_equipment(request: HttpRequest) -> HttpResponse:
-    form = EquipmentCreateForm(request.POST or None)
+class EquipmentCreateView(CreateView):
+    template_name = 'equipment/add-equipment.html'
+    model = MODEL
+    form_class = EquipmentCreateForm
 
-    if request.method== 'POST' and form.is_valid():
-        form.save()
-        return redirect('equipment:list')
+    def get_success_url(self):
+        return reverse('equipment:details', kwargs={'pk': self.object.pk, 'slug': self.object.slug})
 
-    context = {'form': form}
+class EquipmentDeleteView(DeleteView):
+    model = MODEL
+    template_name = 'equipment/delete-equipment.html'
+    context_object_name = 'equipment_item'
+    success_url = reverse_lazy('equipment:list')
 
-    return render(request, 'equipment/add-equipment.html', context)
+class EquipmentEditView(UpdateView):
+    model = MODEL
+    form_class = EquipmentEditForm
+    template_name = 'equipment/edit-equipment.html'
+    context_object_name = 'equipment_item'
 
-def delete_equipment(request: HttpRequest, pk: int, slug: str) -> HttpResponse:
-    equipment_item = get_object_or_404(Equipment, pk=pk, slug=slug)
-    if request.method == 'POST':
-        equipment_item.delete()
-        return redirect('equipment:list')
-
-    context = {'equipment_item': equipment_item}
-
-    return render(request, 'equipment/delete-equipment.html', context)
-
-def edit_equipment(request: HttpRequest, pk: int, slug: str) -> HttpResponse:
-    equipment_item = get_object_or_404(Equipment, pk=pk, slug=slug)
-    form = EquipmentEditForm(request.POST or None, instance=equipment_item)
-
-    if request.method== 'POST' and form.is_valid():
-        form.save()
-        return redirect('equipment:list')
-
-    context = {'form': form, 'equipment_item':equipment_item}
-
-    return render(request, 'equipment/edit-equipment.html', context)
-
+    def get_success_url(self):
+        return reverse('equipment:details', kwargs={'pk': self.object.pk, 'slug': self.object.slug})
 
 class EquipmentListView(ListView):
-    model = Equipment
+    model = MODEL
     context_object_name = 'equipment_items'
     template_name = 'equipment/equipment-list.html'
     paginate_by = 9
@@ -64,9 +52,7 @@ class EquipmentListView(ListView):
         context['button_class'] = 'bg-blue-600 hover:bg-blue-700'
         return context
 
-def equipment_details(request: HttpRequest, pk: int, slug: str) -> HttpResponse:
-    equipment_item = get_object_or_404(Equipment, pk=pk, slug=slug)
-
-    context = {'equipment_item': equipment_item}
-
-    return render(request, 'equipment/equipment-details.html', context)
+class EquipmentDetailView(DetailView):
+    model = MODEL
+    template_name = 'equipment/equipment-details.html'
+    context_object_name = 'equipment_item'

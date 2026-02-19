@@ -20,13 +20,17 @@ class EquipmentCreateForm(EquipmentFormBasic):
             'image_url': 'Equipment image url',
             'type': 'Select the type of equipment',
         }
+        widgets = {
+            'description': forms.Textarea(attrs={'cols': 80, 'rows': 3}),
+        }
 
 
 
 class EquipmentEditForm(EquipmentFormBasic):
     class Meta(EquipmentFormBasic.Meta):
         widgets = {
-            'slug': forms.TextInput(attrs={'disabled': True})
+            'slug': forms.TextInput(attrs={'disabled': True}),
+            'description': forms.Textarea(attrs={'cols': 80, 'rows': 3}),
         }
 
 

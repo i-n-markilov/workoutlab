@@ -17,11 +17,15 @@ class WorkoutPlanCreateForm(WorkoutPlanFormBasic):
             'name': 'Add workout plan name',
             'notes': 'Add some helpful notes',
         }
+        widgets = {
+            'notes': forms.Textarea(attrs={'cols': 80, 'rows': 3}),
+        }
 
 class WorkoutPlanEditForm(WorkoutPlanFormBasic):
     class Meta(WorkoutPlanFormBasic.Meta):
         widgets = {
-            'slug': forms.TextInput(attrs={'disabled': True})
+            'slug': forms.TextInput(attrs={'disabled': True}),
+            'notes': forms.Textarea(attrs={'cols': 80, 'rows': 3}),
         }
 
 class WorkoutExerciseForm(forms.ModelForm):

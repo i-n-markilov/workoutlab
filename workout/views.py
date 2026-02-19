@@ -1,13 +1,14 @@
 from django.http import HttpRequest, HttpResponse
 from django.shortcuts import render, redirect, get_object_or_404
+from django.urls import reverse_lazy
 from django.utils.text import slugify
-from django.views.generic import ListView
+from django.views.generic import ListView, DetailView, DeleteView
 
 from workout.forms import WorkoutPlanEditForm, WorkoutPlanCreateForm, dynamic_workout_formset, WorkoutPlanSearchForm
 from workout.models import WorkoutPlan
 
+MODEL = WorkoutPlan
 
-# Create your views here.
 def add_workout(request: HttpRequest) -> HttpResponse:
     if request.method == "POST":
         workout_form = WorkoutPlanCreateForm(request.POST)
@@ -34,16 +35,11 @@ def add_workout(request: HttpRequest) -> HttpResponse:
         'formset': formset,
     })
 
-def delete_workout(request: HttpRequest, pk: int, slug:str) -> HttpResponse:
-    workout_plan = get_object_or_404(WorkoutPlan,pk=pk, slug=slug)
-
-    if request.method == "POST":
-        workout_plan.delete()
-        return redirect('workout:list')
-
-    context = {'workout_plan': workout_plan}
-
-    return render(request, 'workout/delete-workout.html', context)
+class WorkoutPlanDeleteView(DeleteView):
+    model = MODEL
+    template_name = 'workout/delete-workout.html'
+    context_object_name = 'workout_plan'
+    success_url = reverse_lazy('workout:list')
 
 def edit_workout(request: HttpRequest, pk: int, slug:str) -> HttpResponse:
     workout_plan = get_object_or_404(WorkoutPlan, pk=pk, slug=slug)
@@ -68,7 +64,7 @@ def edit_workout(request: HttpRequest, pk: int, slug:str) -> HttpResponse:
     return render(request, 'workout/edit-workout.html', context)
 
 class WorkoutPlanListView(ListView):
-    model = WorkoutPlan
+    model = MODEL
     context_object_name = 'workout_plans'
     template_name = 'workout/workout-list.html'
     paginate_by = 9
@@ -89,9 +85,7 @@ class WorkoutPlanListView(ListView):
         context['button_class'] = 'bg-purple-600 hover:bg-purple-700'
         return context
 
-def workout_details(request: HttpRequest, pk: int, slug:str) -> HttpResponse:
-    workout_plan = get_object_or_404(WorkoutPlan, pk=pk, slug=slug)
-
-    context = {'workout_plan': workout_plan}
-
-    return render(request, 'workout/workout-details.html', context)
+class WorkoutPlanDetailView(DetailView):
+    model = MODEL
+    template_name = 'workout/workout-details.html'
+    context_object_name = 'workout_plan'

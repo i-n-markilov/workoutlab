@@ -22,11 +22,17 @@ class ExerciseCreateForm(ExerciseFormBasic):
             'equipment': 'Select the appropriate equipment (if applicable)',
 
         }
+        widgets = {
+            'description': forms.Textarea(attrs={'cols': 80, 'rows': 3}),
+            'instructions': forms.Textarea(attrs={'cols': 80, 'rows': 3}),
+        }
 
 class ExerciseEditForm(ExerciseFormBasic):
     class Meta(ExerciseFormBasic.Meta):
         widgets = {
-            'slug': forms.TextInput(attrs={'disabled': True})
+            'slug': forms.TextInput(attrs={'disabled': True}),
+            'description': forms.Textarea(attrs={'cols': 80, 'rows': 3}),
+            'instructions': forms.Textarea(attrs={'cols': 80, 'rows': 3}),
         }
 
 class ExerciseSearchForm(NameSearchForm):

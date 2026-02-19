@@ -4,9 +4,9 @@ from workout import views
 app_name = 'workout'
 
 workout_patterns =[
-    path('', views.workout_details, name='details'),
+    path('', views.WorkoutPlanDetailView.as_view(), name='details'),
     path('edit/', views.edit_workout, name='edit'),
-    path('delete/', views.delete_workout, name='delete'),
+    path('delete/', views.WorkoutPlanDeleteView.as_view(), name='delete'),
 ]
 
 urlpatterns = [
