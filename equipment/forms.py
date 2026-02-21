@@ -23,6 +23,13 @@ class EquipmentCreateForm(EquipmentFormBasic):
         widgets = {
             'description': forms.Textarea(attrs={'cols': 80, 'rows': 3}),
         }
+        error_messages = {
+            'name': {
+                'unique' : 'Equipment already exists. Try something unique!',
+                'required' : 'Give the equipment a name so you can find it later.',
+                'max_length' : "That's a long name! Please keep it under 100 characters.",
+            }
+        }
 
 
 
@@ -31,6 +38,13 @@ class EquipmentEditForm(EquipmentFormBasic):
         widgets = {
             'slug': forms.TextInput(attrs={'disabled': True}),
             'description': forms.Textarea(attrs={'cols': 80, 'rows': 3}),
+        }
+        error_messages = {
+            'name': {
+                'unique' : 'Equipment already exists. Try something unique!',
+                'required' : 'Keep the equipment name so you can find it later.',
+                'max_length' : "That's a long name! Please keep it under 100 characters.",
+            }
         }
 
 

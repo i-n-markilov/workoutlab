@@ -20,6 +20,13 @@ class WorkoutPlanCreateForm(WorkoutPlanFormBasic):
         widgets = {
             'notes': forms.Textarea(attrs={'cols': 80, 'rows': 3}),
         }
+        error_messages = {
+            'name': {
+                'unique' : 'Workout plan already exists. Try something unique!',
+                'required' : 'Give the Workout plan a name so you can find it later.',
+                'max_length' : "That's a long name! Please keep it under 100 characters.",
+            }
+        }
 
 class WorkoutPlanEditForm(WorkoutPlanFormBasic):
     class Meta(WorkoutPlanFormBasic.Meta):
@@ -27,11 +34,23 @@ class WorkoutPlanEditForm(WorkoutPlanFormBasic):
             'slug': forms.TextInput(attrs={'disabled': True}),
             'notes': forms.Textarea(attrs={'cols': 80, 'rows': 3}),
         }
+        error_messages = {
+            'name': {
+                'unique' : 'Workout plan already exists. Try something unique!',
+                'required' : 'Keep the workout plan a name so you can find it later.',
+                'max_length' : "That's a long name! Please keep it under 100 characters.",
+            }
+        }
 
 class WorkoutExerciseForm(forms.ModelForm):
     class Meta:
         model = WorkoutExercise
         fields = ['exercise', 'order', 'sets', 'reps', 'duration_seconds', 'rest_seconds']
+        labels = {
+            'order': 'Order of execution',
+            'duration_seconds': 'Duration (sec)',
+            'rest_seconds': 'Rest (sec)',
+        }
 
 
 

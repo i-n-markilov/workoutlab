@@ -16,10 +16,10 @@ def add_workout(request: HttpRequest) -> HttpResponse:
             workout = workout_form.save(commit=False)
             if not workout.slug:
                 workout.slug = slugify(workout.name)
-            workout.save()
 
             formset = dynamic_workout_formset(instance=workout, data=request.POST)
             if formset.is_valid():
+                workout.save()
                 formset.save()
                 return redirect('workout:details', pk=workout.pk, slug=workout.slug)
         else:
