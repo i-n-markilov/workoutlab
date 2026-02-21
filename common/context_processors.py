@@ -1,5 +1,3 @@
-from django.core.cache import cache
-
 from common.models import MotivationMessage
 from equipment.models import Equipment
 from exercise.models import Exercise
