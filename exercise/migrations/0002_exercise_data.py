@@ -304,7 +304,7 @@ def remove_initial_exercises(apps, schema_editor):
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('exercise', '0003_alter_exercise_secondary_muscle_group'),
+        ('exercise', '0001_initial'),
     ]
 
     operations = [
