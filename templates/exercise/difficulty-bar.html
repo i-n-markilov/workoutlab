@@ -1,0 +1,6 @@
+<span class='inline-flex items-center gap-1 align-middle'>
+    {% for i in '123' %}
+        <span class='h-2 w-8 rounded {% if forloop.counter <= filled_in %}{{ color }}{% else %}bg-gray-300{% endif %}'>
+        </span>
+    {% endfor %}
+</span>
