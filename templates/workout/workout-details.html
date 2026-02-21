@@ -34,6 +34,7 @@
                 <thead class="bg-gray-100">
                     <tr>
                         <th class="px-4 py-2 text-left">Exercise</th>
+                        <th class="px-4 py-2 text-left">Order</th>
                         <th class="px-4 py-2 text-left">Sets</th>
                         <th class="px-4 py-2 text-left">Reps</th>
                         <th class="px-4 py-2 text-left">Duration (s)</th>
@@ -43,10 +44,11 @@
                     {% for we in workout_plan.items.all %}
                         <tr class="border-b hover:bg-gray-50">
                             <td class="px-2 py-1">
-                                <a href='{% url 'exercise:details' we.exercise.pk we.exercise.slug %}' class='text-blue-600 hover:underline'>
+                                <a href='{% url 'exercise:details' we.exercise.pk we.exercise.slug %}' class='inline-block bg-gray-200 rounded-lg px-3 py-1 text-sm font-semibold text-gray-700 mr-2 mb-2'>
                                     {{ we.exercise.name }}
                                 </a>
                             </td>
+                            <td class="px-2 py-1">{{ we.order }}</td>
                             <td class="px-2 py-1">{{ we.sets }}</td>
                             <td class="px-2 py-1">{{ we.repetitions }}</td>
                             <td class="px-2 py-1">
