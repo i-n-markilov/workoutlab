@@ -216,7 +216,7 @@ EXERCISES = [
      '3. Push upward until arms extend.\n'
      '4. Keep torso upright.\n'
      '5. Avoid swinging.',
-     'Hard', 'Arms', None, False, ['Pull-Up Bar']),
+     'Hard', 'Arms', None, True, ['Pull-Up Bar']),
 
     ('Battle Rope Slams',
      'Explosive conditioning exercise.',
