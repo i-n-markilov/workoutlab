@@ -34,6 +34,7 @@ ALLOWED_HOSTS = []
 
 # Application definition
 PROJECT_APPS = [
+    'accounts',
     'common',
     'equipment',
     'exercise',
@@ -143,3 +144,9 @@ STATICFILES_DIRS = [
 CRISPY_ALLOWED_TEMPLATE_PACKS = 'tailwind'
 
 CRISPY_TEMPLATE_PACK = 'tailwind'
+
+AUTH_USER_MODEL = 'accounts.AppUser'
+
+LOGIN_REDIRECT_URL = 'common:home'
+LOGOUT_REDIRECT_URL = 'accounts:login'
+LOGIN_URL = 'accounts:login'
