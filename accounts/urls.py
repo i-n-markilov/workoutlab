@@ -1,7 +1,7 @@
 from django.contrib.auth.views import LoginView, LogoutView
-from django.urls import path, include, reverse_lazy
+from django.urls import path, include
 
-from accounts.views import RegisterUserView
+from accounts.views import RegisterUserView, ProfileDetailsView
 
 app_name = 'accounts'
 
