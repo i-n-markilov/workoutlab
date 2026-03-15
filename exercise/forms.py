@@ -1,6 +1,8 @@
 from django import forms
+from django.db.models import Q
 
 from common.forms import NameSearchForm
+from equipment.models import Equipment
 from exercise.models import Exercise
 
 
@@ -49,6 +51,15 @@ class ExerciseCreateForm(ExerciseFormBasic):
                 raise forms.ValidationError('Primary and secondary muscle groups cannot be the same')
 
         return cleaned_data
+
+    def __init__(self, *args, **kwargs):
+        user = kwargs.pop('user', None)
+        super().__init__(*args, **kwargs)
+
+        if user:
+            self.fields['equipment'].queryset = Equipment.objects.filter(
+                Q(private=False) | Q(user=user)
+            )
 
 
 class ExerciseEditForm(ExerciseFormBasic):

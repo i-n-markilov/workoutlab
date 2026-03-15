@@ -1,5 +1,7 @@
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.core.exceptions import PermissionDenied
+from django.db.models import Q
 from django.http import HttpRequest, HttpResponse
 from django.shortcuts import render, redirect, get_object_or_404
 from django.urls import reverse_lazy
@@ -17,21 +19,22 @@ def add_workout(request: HttpRequest) -> HttpResponse:
         workout_form = WorkoutPlanCreateForm(request.POST)
         if workout_form.is_valid():
             workout = workout_form.save(commit=False)
+            workout.user = request.user
             if not workout.slug:
                 workout.slug = slugify(workout.name)
 
-            formset = dynamic_workout_formset(instance=workout, data=request.POST)
+            formset = dynamic_workout_formset(instance=workout, user=request.user, data=request.POST)
             if formset.is_valid():
                 workout.save()
                 formset.save()
                 return redirect('workout:details', pk=workout.pk, slug=workout.slug)
         else:
             workout = WorkoutPlan()
-            formset = dynamic_workout_formset(instance=workout, data=request.POST)
+            formset = dynamic_workout_formset(instance=workout, user=request.user, data=request.POST)
     else:
         workout_form = WorkoutPlanCreateForm()
         workout = WorkoutPlan()
-        formset = dynamic_workout_formset(instance=workout)
+        formset = dynamic_workout_formset(instance=workout, user=request.user,)
 
     return render(request, 'workout/add-workout.html', {
         'workout_form': workout_form,
@@ -48,9 +51,12 @@ class WorkoutPlanDeleteView(LoginRequiredMixin,DeleteView):
 def edit_workout(request: HttpRequest, pk: int, slug:str) -> HttpResponse:
     workout_plan = get_object_or_404(WorkoutPlan, pk=pk, slug=slug)
 
+    if workout_plan.user != request.user:
+        raise PermissionDenied("You can only edit your own workouts!")
+
     if request.method == "POST":
         workout_form = WorkoutPlanEditForm(request.POST, instance=workout_plan)
-        formset = dynamic_workout_formset(instance=workout_plan, data=request.POST)
+        formset = dynamic_workout_formset(instance=workout_plan, user=request.user, data=request.POST)
 
         if workout_form.is_valid() and formset.is_valid():
             workout_form.save()
@@ -58,7 +64,7 @@ def edit_workout(request: HttpRequest, pk: int, slug:str) -> HttpResponse:
             return redirect('workout:details', pk=workout_plan.pk, slug=workout_plan.slug)
     else:
         workout_form = WorkoutPlanEditForm(instance=workout_plan)
-        formset = dynamic_workout_formset(instance=workout_plan)
+        formset = dynamic_workout_formset(instance=workout_plan, user=request.user,)
 
     context = {
         'workout_form': workout_form,
@@ -75,6 +81,13 @@ class WorkoutPlanListView(ListView):
 
     def get_queryset(self):
         queryset = super().get_queryset().order_by('name','-created')
+        user = self.request.user
+
+        if user.is_authenticated:
+            queryset = queryset.filter(Q(private=False) | Q(user=user))
+        else:
+            queryset = queryset.filter(private=False)
+
 
         form = WorkoutPlanSearchForm(self.request.GET)
         if form.is_valid():

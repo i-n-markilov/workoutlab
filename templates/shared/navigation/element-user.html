@@ -2,7 +2,7 @@
      <div class="relative group inline-block text-left">
          <button class="flex items-center text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium transition duration-150 ease-in-out">
              {% if user.is_authenticated %}
-                 <span>{{ user.username|default:"User" }}</span>
+                 <span>{{ user.email|default:"User" }}</span>
              {% else %}
                  <span>Account</span>
              {% endif %}

@@ -20,6 +20,11 @@ class ExerciseCreateView(LoginRequiredMixin, CreateView):
         form.instance.user = self.request.user
         return super().form_valid(form)
 
+    def get_form_kwargs(self):
+        kwargs = super().get_form_kwargs()
+        kwargs['user'] = self.request.user
+        return kwargs
+
 class ExerciseDeleteView(LoginRequiredMixin, DeleteView):
     model = MODEL
     template_name = 'exercise/delete-exercise.html'
@@ -34,6 +39,11 @@ class ExerciseEditView(LoginRequiredMixin, UpdateView):
 
     def get_success_url(self):
         return reverse('exercise:details', kwargs={'pk': self.object.pk, 'slug': self.object.slug})
+
+    def get_form_kwargs(self):
+        kwargs = super().get_form_kwargs()
+        kwargs['user'] = self.request.user
+        return kwargs
 
 class ExerciseListView(ListView):
     model = MODEL

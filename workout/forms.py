@@ -1,7 +1,9 @@
 from django import forms
+from django.db.models import Q
 from django.forms import inlineformset_factory
 
 from common.forms import NameSearchForm
+from exercise.models import Exercise
 from workout.models import WorkoutPlan, WorkoutExercise
 
 
@@ -53,11 +55,18 @@ class WorkoutExerciseForm(forms.ModelForm):
             'rest_seconds': 'Rest (sec)',
         }
 
+    def __init__(self, *args, **kwargs):
+        user = kwargs.pop('user', None)
+        super().__init__(*args, **kwargs)
 
+        if user:
+            self.fields['exercise'].queryset = Exercise.objects.filter(
+                Q(private=False) | Q(private=True, user=user)
+            )
 
 TOTAL_FORMS_COUNT = 6
 
-def dynamic_workout_formset(instance,data=None, total_forms = TOTAL_FORMS_COUNT):
+def dynamic_workout_formset(instance, user, data=None, total_forms = TOTAL_FORMS_COUNT):
     if instance.pk:
         existing_exercises = instance.items.count()
     else:
@@ -74,7 +83,7 @@ def dynamic_workout_formset(instance,data=None, total_forms = TOTAL_FORMS_COUNT)
         extra=extra_forms,
     )
 
-    return WorkoutExerciseFormSet(data=data, instance=instance)
+    return WorkoutExerciseFormSet(data=data, instance=instance, form_kwargs={'user': user})
 
 class WorkoutPlanSearchForm(NameSearchForm):
     ...
