@@ -1,0 +1,43 @@
+{#<!DOCTYPE html>#}
+{#<html lang="en">#}
+{#<head>#}
+{#    <meta charset="UTF-8">#}
+{#    <title>Title</title>#}
+{#</head>#}
+{#<body>#}
+{#    <h1>Profile details</h1>#}
+{#    <p>Username: {{ request.user.email }}</p>#}
+{#</body>#}
+{#</html>#}
+
+{% extends 'shared/base.html' %}
+{% load static %}
+
+{% block title %}
+    Profile
+{% endblock %}
+
+{% block content %}
+    <div class='flex justify-between items-center mb-10'>
+        <h1 class='text-3xl font-bold text-gray-900'>{{ equipment_item.name }}</h1>
+        <div class='flex space-x-2'>
+{#            <a href='{% url 'equipment:edit' equipment_item.pk equipment_item.slug%}' class='bg-orange-300 hover:bg-orange-400 text-white font-bold py-2 px-4 rounded-lg shadow transition duration-300 ease-in-out'>#}
+{#                Edit#}
+{#            </a>#}
+{#            <a href='{% url 'equipment:delete' equipment_item.pk equipment_item.slug%}' class='bg-red-400 hover:bg-red-500 text-white font-bold py-2 px-4 rounded-lg shadow transition duration-300 ease-in-out'>#}
+{#                Delete#}
+{#            </a>#}
+        </div>
+    </div>
+
+    <div class='bg-white p-6 rounded-lg shadow-md flex flex-col md:flex-row md:space-x-6'>
+
+        <div class='flex-1'>
+            <h2 class='text-xl font-semibold text-gray-800 mb-4'>Profile Details</h2>
+            <p class='text-gray-700 mb-2'><strong>Full Name:</strong> {{ profile.get_fullname }}</p>
+            <p class='text-gray-700 mb-2'><strong>Email:</strong> {{ request.user.email }}</p>
+            <p class='text-gray-700 mb-2'><strong>Date of birth:</strong> {{ profile.date_of_birth|date:'M d, Y' }}</p>
+        </div>
+
+    </div>
+{% endblock content %}

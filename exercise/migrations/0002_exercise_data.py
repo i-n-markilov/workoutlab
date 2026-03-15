@@ -289,6 +289,8 @@ def add_initial_exercises(apps, schema_editor):
                 'secondary_muscle_group': secondary,
                 'is_bodyweight': is_bodyweight,
                 'slug': slug,
+                'private': False,
+                'system_generated': True,
             },
         )
 

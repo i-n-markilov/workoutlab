@@ -1,3 +1,5 @@
+from django.contrib.auth.mixins import LoginRequiredMixin
+from django.db.models import Q
 from django.urls import reverse, reverse_lazy
 from django.views.generic import ListView, CreateView, DetailView, DeleteView, UpdateView
 
@@ -6,7 +8,7 @@ from exercise.models import Exercise
 
 MODEL = Exercise
 
-class ExerciseCreateView(CreateView):
+class ExerciseCreateView(LoginRequiredMixin, CreateView):
     template_name = 'exercise/add-exercise.html'
     model = MODEL
     form_class = ExerciseCreateForm
@@ -14,13 +16,17 @@ class ExerciseCreateView(CreateView):
     def get_success_url(self):
         return reverse('exercise:details', kwargs={'pk': self.object.pk, 'slug': self.object.slug})
 
-class ExerciseDeleteView(DeleteView):
+    def form_valid(self, form):
+        form.instance.user = self.request.user
+        return super().form_valid(form)
+
+class ExerciseDeleteView(LoginRequiredMixin, DeleteView):
     model = MODEL
     template_name = 'exercise/delete-exercise.html'
     context_object_name = 'exercise'
     success_url = reverse_lazy('exercise:list')
 
-class ExerciseEditView(UpdateView):
+class ExerciseEditView(LoginRequiredMixin, UpdateView):
     model = MODEL
     form_class = ExerciseEditForm
     template_name = 'exercise/edit-exercise.html'
@@ -37,6 +43,13 @@ class ExerciseListView(ListView):
 
     def get_queryset(self):
         queryset = super().get_queryset().order_by('name','-created')
+
+        user = self.request.user
+
+        if user.is_authenticated:
+            queryset = queryset.filter(Q(private=False) | Q(user=user))
+        else:
+            queryset = queryset.filter(private=False)
 
         form = ExerciseSearchForm(self.request.GET)
         if form.is_valid():

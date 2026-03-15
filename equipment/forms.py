@@ -13,7 +13,7 @@ class EquipmentFormBasic(forms.ModelForm):
 
 class EquipmentCreateForm(EquipmentFormBasic):
     class Meta(EquipmentFormBasic.Meta):
-        exclude = ['slug', ]
+        exclude = ['slug', 'user', 'system_generated']
         help_texts = {
             'name': 'Add equipment name',
             'description': 'Add short description',
@@ -35,6 +35,7 @@ class EquipmentCreateForm(EquipmentFormBasic):
 
 class EquipmentEditForm(EquipmentFormBasic):
     class Meta(EquipmentFormBasic.Meta):
+        exclude = ['user', 'system_generated']
         widgets = {
             'slug': forms.TextInput(attrs={'disabled': True}),
             'description': forms.Textarea(attrs={'cols': 80, 'rows': 3}),

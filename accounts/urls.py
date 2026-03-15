@@ -6,12 +6,12 @@ from accounts.views import RegisterUserView, ProfileDetailsView
 app_name = 'accounts'
 
 profile_patterns = [
-
+    path('details/', ProfileDetailsView.as_view(), name='profile'),
 ]
 
 auth_patterns = [
     path('register/', RegisterUserView.as_view(), name='register'),
-    path('login/', LoginView.as_view(template_name='accounts/login.html'), name='login'),
+    path('login/', LoginView.as_view(template_name='accounts/user/login.html'), name='login'),
     path('logout/', LogoutView.as_view(), name='logout'),
 
 ]

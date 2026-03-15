@@ -1,8 +1,10 @@
+from django.contrib.auth import get_user_model
 from django.db import models
 
 from common.models import TimeStampedModel, NameSlugModel
 from equipment.models import Equipment
 
+UserModel = get_user_model()
 
 class Exercise(TimeStampedModel, NameSlugModel):
     class MuscleGroup(models.TextChoices):
@@ -40,3 +42,13 @@ class Exercise(TimeStampedModel, NameSlugModel):
     )
 
     is_bodyweight = models.BooleanField(default=False)
+
+    user = models.ForeignKey(UserModel,
+                             on_delete=models.CASCADE,
+                             related_name='exercise',
+                             null=True,
+                             blank=True,)
+
+    private = models.BooleanField(default=False)
+
+    system_generated = models.BooleanField(default=False)

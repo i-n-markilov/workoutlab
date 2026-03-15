@@ -12,7 +12,7 @@ class WorkoutPlanFormBasic(forms.ModelForm):
 
 class WorkoutPlanCreateForm(WorkoutPlanFormBasic):
     class Meta(WorkoutPlanFormBasic.Meta):
-        exclude = ['slug',]
+        exclude = ['slug', 'user']
         help_texts = {
             'name': 'Add workout plan name',
             'notes': 'Add some helpful notes',
@@ -30,6 +30,7 @@ class WorkoutPlanCreateForm(WorkoutPlanFormBasic):
 
 class WorkoutPlanEditForm(WorkoutPlanFormBasic):
     class Meta(WorkoutPlanFormBasic.Meta):
+        exclude = ['user',]
         widgets = {
             'slug': forms.TextInput(attrs={'disabled': True}),
             'notes': forms.Textarea(attrs={'cols': 80, 'rows': 3}),

@@ -11,7 +11,7 @@ class ExerciseFormBasic(forms.ModelForm):
 
 class ExerciseCreateForm(ExerciseFormBasic):
     class Meta(ExerciseFormBasic.Meta):
-        exclude = ['slug', ]
+        exclude = ['slug', 'user', 'system_generated']
         help_texts = {
             'name': 'Add exercise name',
             'difficulty': 'Choose an appropriate difficulty',
@@ -53,6 +53,7 @@ class ExerciseCreateForm(ExerciseFormBasic):
 
 class ExerciseEditForm(ExerciseFormBasic):
     class Meta(ExerciseFormBasic.Meta):
+        exclude = ['user', 'system_generated']
         widgets = {
             'slug': forms.TextInput(attrs={'disabled': True}),
             'description': forms.Textarea(attrs={'cols': 80, 'rows': 3}),

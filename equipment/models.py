@@ -1,7 +1,10 @@
+from django.contrib.auth import get_user_model
+from django.contrib.auth.models import User
 from django.db import models
 
 from common.models import TimeStampedModel, NameSlugModel
 
+UserModel = get_user_model()
 
 class Equipment(TimeStampedModel, NameSlugModel):
     class TypeChoices(models.TextChoices):
@@ -19,3 +22,13 @@ class Equipment(TimeStampedModel, NameSlugModel):
 
     type = models.CharField(max_length=100,
                             choices=TypeChoices.choices,)
+
+    user = models.ForeignKey(UserModel,
+                             on_delete=models.CASCADE,
+                             related_name='equipment',
+                             null=True,
+                             blank=True,)
+
+    private = models.BooleanField(default=False)
+
+    system_generated = models.BooleanField(default=False)

@@ -1,14 +1,24 @@
+from django.contrib.auth import get_user_model
 from django.db import models
 
 from common.models import TimeStampedModel, NameSlugModel
 from exercise.models import Exercise
 from workout.validators import min_value_validator
 
+UserModel = get_user_model()
 
 class WorkoutPlan(TimeStampedModel, NameSlugModel):
 
     notes = models.TextField(blank=True,
                              null=True)
+
+    user = models.ForeignKey(UserModel,
+                             on_delete=models.CASCADE,
+                             related_name='workout_plan',
+                             null=True,
+                             blank=True,)
+
+    private = models.BooleanField(default=False)
 
 class WorkoutExercise(models.Model):
     workout = models.ForeignKey(

@@ -38,6 +38,8 @@ def add_initial_equipment(apps, schema_editor):
                 'description': description,
                 'image_url': image_url,
                 'slug': slug,
+                'private': False,
+                'system_generated': True,
             },
         )
 

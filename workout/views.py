@@ -1,3 +1,5 @@
+from django.contrib.auth.decorators import login_required
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.http import HttpRequest, HttpResponse
 from django.shortcuts import render, redirect, get_object_or_404
 from django.urls import reverse_lazy
@@ -9,6 +11,7 @@ from workout.models import WorkoutPlan
 
 MODEL = WorkoutPlan
 
+@login_required
 def add_workout(request: HttpRequest) -> HttpResponse:
     if request.method == "POST":
         workout_form = WorkoutPlanCreateForm(request.POST)
@@ -35,12 +38,13 @@ def add_workout(request: HttpRequest) -> HttpResponse:
         'formset': formset,
     })
 
-class WorkoutPlanDeleteView(DeleteView):
+class WorkoutPlanDeleteView(LoginRequiredMixin,DeleteView):
     model = MODEL
     template_name = 'workout/delete-workout.html'
     context_object_name = 'workout_plan'
     success_url = reverse_lazy('workout:list')
 
+@login_required
 def edit_workout(request: HttpRequest, pk: int, slug:str) -> HttpResponse:
     workout_plan = get_object_or_404(WorkoutPlan, pk=pk, slug=slug)
 
