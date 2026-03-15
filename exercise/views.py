@@ -1,5 +1,6 @@
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.db.models import Q
+from django.shortcuts import get_object_or_404
 from django.urls import reverse, reverse_lazy
 from django.views.generic import ListView, CreateView, DetailView, DeleteView, UpdateView
 
@@ -31,6 +32,9 @@ class ExerciseDeleteView(LoginRequiredMixin, DeleteView):
     context_object_name = 'exercise'
     success_url = reverse_lazy('exercise:list')
 
+    def get_object(self, queryset=None):
+        return get_object_or_404(MODEL, pk=self.kwargs['pk'], slug=self.kwargs['slug'])
+
 class ExerciseEditView(LoginRequiredMixin, UpdateView):
     model = MODEL
     form_class = ExerciseEditForm
@@ -44,6 +48,9 @@ class ExerciseEditView(LoginRequiredMixin, UpdateView):
         kwargs = super().get_form_kwargs()
         kwargs['user'] = self.request.user
         return kwargs
+
+    def get_object(self, queryset=None):
+        return get_object_or_404(MODEL, pk=self.kwargs['pk'], slug=self.kwargs['slug'])
 
 class ExerciseListView(ListView):
     model = MODEL
@@ -79,3 +86,6 @@ class ExerciseDetailView(DetailView):
     model = MODEL
     template_name = 'exercise/exercise-details.html'
     context_object_name = 'exercise'
+
+    def get_object(self, queryset=None):
+        return get_object_or_404(MODEL, pk=self.kwargs['pk'], slug=self.kwargs['slug'])

@@ -47,6 +47,9 @@ class WorkoutPlanDeleteView(LoginRequiredMixin,DeleteView):
     context_object_name = 'workout_plan'
     success_url = reverse_lazy('workout:list')
 
+    def get_object(self, queryset=None):
+        return get_object_or_404(MODEL, pk=self.kwargs['pk'], slug=self.kwargs['slug'])
+
 @login_required
 def edit_workout(request: HttpRequest, pk: int, slug:str) -> HttpResponse:
     workout_plan = get_object_or_404(WorkoutPlan, pk=pk, slug=slug)
@@ -106,3 +109,6 @@ class WorkoutPlanDetailView(DetailView):
     model = MODEL
     template_name = 'workout/workout-details.html'
     context_object_name = 'workout_plan'
+
+    def get_object(self, queryset=None):
+        return get_object_or_404(MODEL, pk=self.kwargs['pk'], slug=self.kwargs['slug'])
