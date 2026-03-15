@@ -11,7 +11,7 @@ class RegisterUserView(CreateView):
     model = UserModel
     form_class = AppUserCreationForm
     template_name = 'accounts/user/register.html'
-    success_url = reverse_lazy('common:home')
+    success_url = reverse_lazy('accounts:login')
 
 class ProfileDetailsView(TemplateView):
     model = Profile
