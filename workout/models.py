@@ -1,6 +1,7 @@
 from django.contrib.auth import get_user_model
 from django.db import models
 
+from common.managers import VisibilityQuerySet
 from common.models import TimeStampedModel, NameSlugModel
 from exercise.models import Exercise
 from workout.validators import min_value_validator
@@ -19,6 +20,8 @@ class WorkoutPlan(TimeStampedModel, NameSlugModel):
                              blank=True,)
 
     private = models.BooleanField(default=False)
+
+    objects = VisibilityQuerySet.as_manager()
 
 class WorkoutExercise(models.Model):
     workout = models.ForeignKey(

@@ -1,5 +1,4 @@
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.db.models import Q
 from django.shortcuts import get_object_or_404
 from django.urls import reverse_lazy, reverse
 from django.views.generic import ListView, CreateView, DetailView, UpdateView, DeleteView
@@ -27,8 +26,13 @@ class EquipmentDeleteView(LoginRequiredMixin, DeleteView):
     context_object_name = 'equipment_item'
     success_url = reverse_lazy('equipment:list')
 
+    def get_queryset(self):
+        return Equipment.objects.owned_by(self.request.user)
+
     def get_object(self, queryset=None):
-        return get_object_or_404(MODEL, pk=self.kwargs['pk'], slug=self.kwargs['slug'])
+        if queryset is None:
+            queryset = self.get_queryset()
+        return get_object_or_404(queryset, pk=self.kwargs['pk'], slug=self.kwargs['slug'])
 
 class EquipmentEditView(LoginRequiredMixin, UpdateView):
     model = MODEL
@@ -36,8 +40,13 @@ class EquipmentEditView(LoginRequiredMixin, UpdateView):
     template_name = 'equipment/edit-equipment.html'
     context_object_name = 'equipment_item'
 
+    def get_queryset(self):
+        return Equipment.objects.owned_by(self.request.user)
+
     def get_object(self, queryset=None):
-        return get_object_or_404(MODEL, pk=self.kwargs['pk'], slug=self.kwargs['slug'])
+        if queryset is None:
+            queryset = self.get_queryset()
+        return get_object_or_404(queryset, pk=self.kwargs['pk'], slug=self.kwargs['slug'])
 
     def get_success_url(self):
         return reverse('equipment:details', kwargs={'pk': self.object.pk, 'slug': self.object.slug})
@@ -49,22 +58,14 @@ class EquipmentListView(ListView):
     paginate_by = 9
 
     def get_queryset(self):
-        queryset = super().get_queryset().order_by('name','-created')
-
-        user = self.request.user
-
-        if user.is_authenticated:
-            queryset = queryset.filter(Q(private=False) | Q(user=user))
-        else:
-            queryset = queryset.filter(private=False)
+        qs = Equipment.objects.visible_for_user(self.request.user)
+        qs = qs.order_by('name', '-created')
 
         form = EquipmentSearchForm(self.request.GET)
         if form.is_valid():
-            q = self.request.GET.get('q')
-            if q:
-                queryset = queryset.filter(name__icontains=q)
+            qs = qs.search(form.cleaned_data.get('q'))
 
-        return queryset
+        return qs
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -77,5 +78,10 @@ class EquipmentDetailView(DetailView):
     template_name = 'equipment/equipment-details.html'
     context_object_name = 'equipment_item'
 
+    def get_queryset(self):
+        return Equipment.objects.owned_by(self.request.user)
+
     def get_object(self, queryset=None):
-        return get_object_or_404(MODEL, pk=self.kwargs['pk'], slug=self.kwargs['slug'])
+        if queryset is None:
+            queryset = self.get_queryset()
+        return get_object_or_404(queryset, pk=self.kwargs['pk'], slug=self.kwargs['slug'])

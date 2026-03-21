@@ -1,5 +1,4 @@
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.db.models import Q
 from django.shortcuts import get_object_or_404
 from django.urls import reverse, reverse_lazy
 from django.views.generic import ListView, CreateView, DetailView, DeleteView, UpdateView
@@ -32,8 +31,13 @@ class ExerciseDeleteView(LoginRequiredMixin, DeleteView):
     context_object_name = 'exercise'
     success_url = reverse_lazy('exercise:list')
 
+    def get_queryset(self):
+        return Exercise.objects.owned_by(self.request.user)
+
     def get_object(self, queryset=None):
-        return get_object_or_404(MODEL, pk=self.kwargs['pk'], slug=self.kwargs['slug'])
+        if queryset is None:
+            queryset = self.get_queryset()
+        return get_object_or_404(queryset, pk=self.kwargs['pk'], slug=self.kwargs['slug'])
 
 class ExerciseEditView(LoginRequiredMixin, UpdateView):
     model = MODEL
@@ -49,8 +53,13 @@ class ExerciseEditView(LoginRequiredMixin, UpdateView):
         kwargs['user'] = self.request.user
         return kwargs
 
+    def get_queryset(self):
+        return Exercise.objects.owned_by(self.request.user)
+
     def get_object(self, queryset=None):
-        return get_object_or_404(MODEL, pk=self.kwargs['pk'], slug=self.kwargs['slug'])
+        if queryset is None:
+            queryset = self.get_queryset()
+        return get_object_or_404(queryset, pk=self.kwargs['pk'], slug=self.kwargs['slug'])
 
 class ExerciseListView(ListView):
     model = MODEL
@@ -59,22 +68,14 @@ class ExerciseListView(ListView):
     paginate_by = 9
 
     def get_queryset(self):
-        queryset = super().get_queryset().order_by('name','-created')
-
-        user = self.request.user
-
-        if user.is_authenticated:
-            queryset = queryset.filter(Q(private=False) | Q(user=user))
-        else:
-            queryset = queryset.filter(private=False)
+        qs = Exercise.objects.visible_for_user(self.request.user)
+        qs = qs.order_by('name', '-created')
 
         form = ExerciseSearchForm(self.request.GET)
         if form.is_valid():
-            q= self.request.GET.get('q')
-            if q:
-                queryset = queryset.filter(name__icontains=q)
+            qs = qs.search(form.cleaned_data.get('q'))
 
-        return queryset
+        return qs
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -87,5 +88,10 @@ class ExerciseDetailView(DetailView):
     template_name = 'exercise/exercise-details.html'
     context_object_name = 'exercise'
 
+    def get_queryset(self):
+        return Exercise.objects.owned_by(self.request.user)
+
     def get_object(self, queryset=None):
-        return get_object_or_404(MODEL, pk=self.kwargs['pk'], slug=self.kwargs['slug'])
+        if queryset is None:
+            queryset = self.get_queryset()
+        return get_object_or_404(queryset, pk=self.kwargs['pk'], slug=self.kwargs['slug'])

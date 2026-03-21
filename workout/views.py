@@ -1,7 +1,5 @@
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.core.exceptions import PermissionDenied
-from django.db.models import Q
 from django.http import HttpRequest, HttpResponse
 from django.shortcuts import render, redirect, get_object_or_404
 from django.urls import reverse_lazy
@@ -47,15 +45,17 @@ class WorkoutPlanDeleteView(LoginRequiredMixin,DeleteView):
     context_object_name = 'workout_plan'
     success_url = reverse_lazy('workout:list')
 
+    def get_queryset(self):
+        return WorkoutPlan.objects.owned_by(self.request.user)
+
     def get_object(self, queryset=None):
-        return get_object_or_404(MODEL, pk=self.kwargs['pk'], slug=self.kwargs['slug'])
+        if queryset is None:
+            queryset = self.get_queryset()
+        return get_object_or_404(queryset, pk=self.kwargs['pk'], slug=self.kwargs['slug'])
 
 @login_required
 def edit_workout(request: HttpRequest, pk: int, slug:str) -> HttpResponse:
-    workout_plan = get_object_or_404(WorkoutPlan, pk=pk, slug=slug)
-
-    if workout_plan.user != request.user:
-        raise PermissionDenied("You can only edit your own workouts!")
+    workout_plan = get_object_or_404(WorkoutPlan.objects.owned_by(request.user), pk=pk, slug=slug)
 
     if request.method == "POST":
         workout_form = WorkoutPlanEditForm(request.POST, instance=workout_plan)
@@ -83,21 +83,14 @@ class WorkoutPlanListView(ListView):
     paginate_by = 9
 
     def get_queryset(self):
-        queryset = super().get_queryset().order_by('name','-created')
-        user = self.request.user
-
-        if user.is_authenticated:
-            queryset = queryset.filter(Q(private=False) | Q(user=user))
-        else:
-            queryset = queryset.filter(private=False)
-
+        qs = WorkoutPlan.objects.visible_for_user(self.request.user)
+        qs = qs.order_by('name', '-created')
 
         form = WorkoutPlanSearchForm(self.request.GET)
         if form.is_valid():
-            q = self.request.GET.get('q')
-            if q:
-                queryset = queryset.filter(name__icontains=q)
-        return queryset
+            qs = qs.search(form.cleaned_data.get('q'))
+
+        return qs
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -110,5 +103,10 @@ class WorkoutPlanDetailView(DetailView):
     template_name = 'workout/workout-details.html'
     context_object_name = 'workout_plan'
 
+    def get_queryset(self):
+        return WorkoutPlan.objects.owned_by(self.request.user)
+
     def get_object(self, queryset=None):
-        return get_object_or_404(MODEL, pk=self.kwargs['pk'], slug=self.kwargs['slug'])
+        if queryset is None:
+            queryset = self.get_queryset()
+        return get_object_or_404(queryset, pk=self.kwargs['pk'], slug=self.kwargs['slug'])
