@@ -46,7 +46,7 @@ class WorkoutPlanDeleteView(LoginRequiredMixin,DeleteView):
     success_url = reverse_lazy('workout:list')
 
     def get_queryset(self):
-        return WorkoutPlan.objects.owned_by(self.request.user)
+        return WorkoutPlan.objects.visible_for_user(self.request.user)
 
     def get_object(self, queryset=None):
         if queryset is None:
@@ -55,7 +55,7 @@ class WorkoutPlanDeleteView(LoginRequiredMixin,DeleteView):
 
 @login_required
 def edit_workout(request: HttpRequest, pk: int, slug:str) -> HttpResponse:
-    workout_plan = get_object_or_404(WorkoutPlan.objects.owned_by(request.user), pk=pk, slug=slug)
+    workout_plan = get_object_or_404(WorkoutPlan.objects.visible_for_user(request.user), pk=pk, slug=slug)
 
     if request.method == "POST":
         workout_form = WorkoutPlanEditForm(request.POST, instance=workout_plan)
@@ -104,7 +104,7 @@ class WorkoutPlanDetailView(DetailView):
     context_object_name = 'workout_plan'
 
     def get_queryset(self):
-        return WorkoutPlan.objects.owned_by(self.request.user)
+        return WorkoutPlan.objects.visible_for_user(self.request.user)
 
     def get_object(self, queryset=None):
         if queryset is None:

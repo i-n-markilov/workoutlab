@@ -32,7 +32,7 @@ class ExerciseDeleteView(LoginRequiredMixin, DeleteView):
     success_url = reverse_lazy('exercise:list')
 
     def get_queryset(self):
-        return Exercise.objects.owned_by(self.request.user)
+        return Exercise.objects.visible_for_user(self.request.user)
 
     def get_object(self, queryset=None):
         if queryset is None:
@@ -54,7 +54,7 @@ class ExerciseEditView(LoginRequiredMixin, UpdateView):
         return kwargs
 
     def get_queryset(self):
-        return Exercise.objects.owned_by(self.request.user)
+        return Exercise.objects.visible_for_user(self.request.user)
 
     def get_object(self, queryset=None):
         if queryset is None:
@@ -89,7 +89,7 @@ class ExerciseDetailView(DetailView):
     context_object_name = 'exercise'
 
     def get_queryset(self):
-        return Exercise.objects.owned_by(self.request.user)
+        return Exercise.objects.visible_for_user(self.request.user)
 
     def get_object(self, queryset=None):
         if queryset is None:

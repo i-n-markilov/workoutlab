@@ -27,7 +27,7 @@ class EquipmentDeleteView(LoginRequiredMixin, DeleteView):
     success_url = reverse_lazy('equipment:list')
 
     def get_queryset(self):
-        return Equipment.objects.owned_by(self.request.user)
+        return Equipment.objects.visible_for_user(self.request.user)
 
     def get_object(self, queryset=None):
         if queryset is None:
@@ -41,7 +41,7 @@ class EquipmentEditView(LoginRequiredMixin, UpdateView):
     context_object_name = 'equipment_item'
 
     def get_queryset(self):
-        return Equipment.objects.owned_by(self.request.user)
+        return Equipment.objects.visible_for_user(self.request.user)
 
     def get_object(self, queryset=None):
         if queryset is None:
@@ -79,7 +79,7 @@ class EquipmentDetailView(DetailView):
     context_object_name = 'equipment_item'
 
     def get_queryset(self):
-        return Equipment.objects.owned_by(self.request.user)
+        return Equipment.objects.visible_for_user(self.request.user)
 
     def get_object(self, queryset=None):
         if queryset is None:
