@@ -1,12 +1,14 @@
-from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin
-from django.core.validators import MinLengthValidator
+from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin, AbstractUser
 from django.db import models
 
-from accounts.managers import AppUserManager
 
 
-class AppUser(AbstractBaseUser, PermissionsMixin):
-    USERNAME_FIELD = 'email'
+class AppUser(AbstractUser, PermissionsMixin):
+    USERNAME_FIELD = 'username'
+    REQUIRED_FIELDS = ['email',]
+
+    username = models.CharField(max_length = 50,
+                                unique=True,)
 
     email = models.EmailField(max_length=100,
                               unique=True)
@@ -15,10 +17,8 @@ class AppUser(AbstractBaseUser, PermissionsMixin):
 
     is_staff = models.BooleanField(default=False)
 
-    objects = AppUserManager()
-
     def __str__(self):
-        return self.email
+        return self.username
 
 class Profile(models.Model):
     user = models.OneToOneField(AppUser,

@@ -15,7 +15,7 @@ class AppUserAdmin(UserAdmin):
     change_password_form = AdminPasswordChangeForm
 
     fieldsets = (
-        (None, {'fields': ('password',)}),
+        (None, {'fields': ('username', 'password',)}),
         (_('Personal info'), {'fields': ('email',)}),
         (
             _('Permissions'),
@@ -36,11 +36,11 @@ class AppUserAdmin(UserAdmin):
             None,
             {
                 'classes': ('wide',),
-                'fields': ('email', 'password1', 'password2'),
+                'fields': ('username', 'email', 'password1', 'password2'),
             },
         ),
     )
-    list_display = ('email', 'is_staff')
+    list_display = ('username', 'email', 'is_staff')
     list_filter = ('is_staff', 'is_superuser', 'is_active', 'groups')
-    search_fields = ('email',)
-    ordering = ('email',)
+    search_fields = ('username', 'email',)
+    ordering = ('username',)

@@ -1,13 +1,13 @@
 from django import forms
-from django.contrib.auth.forms import BaseUserCreationForm, UserChangeForm
+from django.contrib.auth.forms import UserCreationForm, UserChangeForm
 
 from accounts.models import AppUser, Profile
 
 
-class AppUserCreationForm(BaseUserCreationForm):
+class AppUserCreationForm(UserCreationForm):
     class Meta:
         model = AppUser
-        fields = ('email',)
+        fields = ('username', 'email')
 
 class AppUserChangeForm(UserChangeForm):
     class Meta(UserChangeForm.Meta):
