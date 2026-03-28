@@ -5,7 +5,7 @@
     <meta charset='UTF-8'>
     <link rel='icon' type='image/png' href='{% static 'images/wl-icon-no-bg.PNG' %}'>
     <title>{% block title %}Title{% endblock %}</title>
-    <script src='https://cdn.tailwindcss.com'></script>
+    <link href='{% static '/dist/styles.css' %}' rel='stylesheet'>
 </head>
 <body class='bg-gray-100 text-gray-800 min-h-screen flex flex-col'>
     {% block navigation %}

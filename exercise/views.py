@@ -73,7 +73,7 @@ class ExerciseListView(ListView):
 
         form = ExerciseSearchForm(self.request.GET)
         if form.is_valid():
-            qs = qs.search(form.cleaned_data.get('q'))
+            qs = qs.search(form.cleaned_data.get('name'))
 
         return qs
 
