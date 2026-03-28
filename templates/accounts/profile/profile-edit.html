@@ -1,10 +1,30 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
+{% extends 'shared/base.html' %}
+{% load static %}
+{% load tailwind_filters %}
 
-</body>
-</html>
+{% block title %}
+    Edit Profile
+{% endblock %}
+
+{% block content %}
+    <h1 class='text-3xl font-bold text-gray-900 mb-10'>Edit Profile</h1>
+
+    <div class='bg-white p-6 rounded-lg shadow-md'>
+        <form method='post'>
+            {% csrf_token %}
+            {% for field in form %}
+                <div class='mb-4'>
+                    {{ field|as_crispy_field }}
+                </div>
+            {% endfor %}
+            <div class='mt-6 flex justify-end'>
+                <button type='submit' class='bg-blue-600 hover:bg-blue-700 mx-2 text-white font-bold py-2 px-4 rounded-lg shadow transition duration-300 ease-in-out'>
+                    Save Changes
+                </button>
+                <a href='{% url 'accounts:profile' request.user.pk%}' class='bg-gray-400 hover:bg-gray-500 mx-2 text-white font-bold py-2 px-4 rounded-lg shadow transition duration-300 ease-in-out'>
+                    Cancel
+                </a>
+            </div>
+        </form>
+    </div>
+{% endblock content %}

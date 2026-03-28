@@ -1,10 +1,30 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
+{% extends 'shared/base.html' %}
+{% load static %}
 
-</body>
-</html>
+{% block title %}
+    Delete profile
+{% endblock %}
+
+{% block content %}
+    <h1 class='text-3xl font-bold text-gray-900 mb-10'>Delete profile</h1>
+
+    <div class='bg-white p-6 rounded-lg shadow-md'>
+        <p class='text-lg text-gray-700 mb-4'>Are you sure you want to proceed?</p>
+        <div class='mt-4 p-4 bg-red-50 border border-red-200 rounded-lg'>
+        <p class='text-sm text-red-700 font-medium'>
+            ⚠️ Warning: This will permanently delete your account and all items created by you!
+        </p>
+        </div>
+        <form method='post'>
+            {% csrf_token %}
+            <div class='mt-6 flex justify-end'>
+                <button type='submit' class='bg-red-600 hover:bg-red-700 mx-2 text-white font-bold py-2 px-4 rounded-lg shadow transition duration-300 ease-in-out'>
+                    Confirm Delete
+                </button>
+                <a href='{% url 'accounts:profile' request.user.pk %}' class='bg-gray-400 hover:bg-gray-500 mx-2 text-white font-bold py-2 px-4 rounded-lg shadow transition duration-300 ease-in-out'>
+                    Cancel
+                </a>
+            </div>
+        </form>
+    </div>
+{% endblock content %}

@@ -32,7 +32,7 @@ class ExerciseDeleteView(LoginRequiredMixin, DeleteView):
     success_url = reverse_lazy('exercise:list')
 
     def get_queryset(self):
-        return Exercise.objects.visible_for_user(self.request.user)
+        return Exercise.objects.editable_by_user(self.request.user)
 
     def get_object(self, queryset=None):
         if queryset is None:
@@ -45,21 +45,21 @@ class ExerciseEditView(LoginRequiredMixin, UpdateView):
     template_name = 'exercise/edit-exercise.html'
     context_object_name = 'exercise'
 
-    def get_success_url(self):
-        return reverse('exercise:details', kwargs={'pk': self.object.pk, 'slug': self.object.slug})
+    def get_queryset(self):
+        return Exercise.objects.editable_by_user(self.request.user)
 
     def get_form_kwargs(self):
         kwargs = super().get_form_kwargs()
         kwargs['user'] = self.request.user
         return kwargs
 
-    def get_queryset(self):
-        return Exercise.objects.visible_for_user(self.request.user)
-
     def get_object(self, queryset=None):
         if queryset is None:
             queryset = self.get_queryset()
         return get_object_or_404(queryset, pk=self.kwargs['pk'], slug=self.kwargs['slug'])
+
+    def get_success_url(self):
+        return reverse('exercise:details', kwargs={'pk': self.object.pk, 'slug': self.object.slug})
 
 class ExerciseListView(ListView):
     model = MODEL

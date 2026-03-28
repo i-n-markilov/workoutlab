@@ -10,6 +10,12 @@ class VisibilityQuerySet(models.QuerySet):
                 return self.filter(Q(private=False) | Q(user=user))
         return self.filter(private=False)
 
+    def editable_by_user(self, user):
+        if user.is_authenticated:
+            if user.is_staff or user.is_superuser:
+                return self.all()
+        return self.filter(user=user)
+
 
     def search(self, query):
         if query:

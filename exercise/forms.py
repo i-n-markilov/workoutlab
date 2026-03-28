@@ -88,5 +88,14 @@ class ExerciseEditForm(ExerciseFormBasic):
             }
         }
 
+    def __init__(self, *args, **kwargs):
+        user = kwargs.pop('user', None)
+        super().__init__(*args, **kwargs)
+
+        if user:
+            self.fields['equipment'].queryset = Equipment.objects.filter(
+                Q(private=False) | Q(user=user)
+            )
+
 class ExerciseSearchForm(NameSearchForm):
     ...

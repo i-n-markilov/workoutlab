@@ -8,7 +8,7 @@
 {% block content %}
     <div class='flex justify-between items-center mb-10'>
         <h1 class='text-3xl font-bold text-gray-900'>{{ equipment_item.name }}</h1>
-        {%  if user.is_authenticated %}
+        {%  if user.is_authenticated and not equipment_item.system_generated and equipment_item.user == request.user %}
             <div class='flex space-x-2'>
                 <a href='{% url 'equipment:edit' equipment_item.pk equipment_item.slug%}' class='bg-orange-300 hover:bg-orange-400 text-white font-bold py-2 px-4 rounded-lg shadow transition duration-300 ease-in-out'>
                     Edit
@@ -27,9 +27,15 @@
             <p class='text-gray-700 mb-2'><strong>Name:</strong> {{ equipment_item.name }}</p>
             <p class='text-gray-700 mb-2'><strong>Description:</strong> {{ equipment_item.description }}</p>
             <p class='text-gray-700 mb-2'><strong>Type:</strong> {{ equipment_item.type }}</p>
+            <p class='text-gray-700 mb-2'><strong>Added by:</strong>
+                {% if equipment_item.system_generated %}
+                    System
+                {% else %}
+                    {{ equipment_item.user.username }}
+                {% endif %}
+            </p>
             <p class='text-gray-700 mb-2'><strong>Added:</strong> {{ equipment_item.created|date:'M d, Y' }}</p>
             <p class='text-gray-700 mb-2'><strong>Last Updated:</strong> {{ equipment_item.modified|date:'M d, Y' }}</p>
-            <p class='text-gray-700 mb-2'><strong>Added by:</strong> {{ equipment_item.user.email }}</p>
         </div>
     
         <div class='flex-shrink-0 mt-4 md:mt-0'>

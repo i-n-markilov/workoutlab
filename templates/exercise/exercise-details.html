@@ -9,7 +9,7 @@
 {% block content %}
     <div class='flex justify-between items-center mb-10'>
         <h1 class='text-3xl font-bold text-gray-900'>{{ exercise.name }}</h1>
-        {%  if user.is_authenticated %}
+        {%  if user.is_authenticated and not exercise.system_generated and exercise.user == request.user %}
             <div class='flex space-x-2'>
                 <a href='{% url 'exercise:edit' exercise.pk exercise.slug %}' class='bg-orange-300 hover:bg-orange-400 text-white font-bold py-2 px-4 rounded-lg shadow transition duration-300 ease-in-out'>
                     Edit
@@ -39,7 +39,13 @@
                 {% endfor %}
             </p>
         {% endif %}
-        <p class='text-gray-700 mb-2'><strong>Added by :</strong> {{ exercise.user.email }}</p>
+        <p class='text-gray-700 mb-2'><strong>Added by :</strong>
+            {% if exercise.system_generated %}
+                System
+            {% else %}
+                {{ exercise.user.username }}
+            {% endif %}
+        </p>
         <p class='text-gray-700 mb-2'><strong>Added:</strong> {{ exercise.created|date:'M d, Y' }}</p>
         <p class='text-gray-700 mb-2'><strong>Last Updated:</strong> {{ exercise.modified|date:'M d, Y' }}</p>
     </div>

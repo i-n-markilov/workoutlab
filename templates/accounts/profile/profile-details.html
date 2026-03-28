@@ -1,15 +1,3 @@
-{#<!DOCTYPE html>#}
-{#<html lang="en">#}
-{#<head>#}
-{#    <meta charset="UTF-8">#}
-{#    <title>Title</title>#}
-{#</head>#}
-{#<body>#}
-{#    <h1>Profile details</h1>#}
-{#    <p>Username: {{ request.user.email }}</p>#}
-{#</body>#}
-{#</html>#}
-
 {% extends 'shared/base.html' %}
 {% load static %}
 
@@ -18,13 +6,15 @@
 {% endblock %}
 
 {% block content %}
-    <div class='flex justify-between items-center mb-10'>
-        <h1 class='text-3xl font-bold text-gray-900'>{{ equipment_item.name }}</h1>
+    <div class='flex justify-end items-center mb-10'>
         <div class='flex space-x-2'>
-            <a href='/' class='bg-orange-300 hover:bg-orange-400 text-white font-bold py-2 px-4 rounded-lg shadow transition duration-300 ease-in-out'>
+            <a href='{% url 'accounts:password_change' %}' class='bg-violet-300 hover:bg-violet-400 text-white font-bold py-2 px-4 rounded-lg shadow transition duration-300 ease-in-out'>
+                Change password
+            </a>
+            <a href='{% url 'accounts:profile-edit' user.pk %}' class='bg-orange-300 hover:bg-orange-400 text-white font-bold py-2 px-4 rounded-lg shadow transition duration-300 ease-in-out'>
                 Edit
             </a>
-            <a href='/' class='bg-red-400 hover:bg-red-500 text-white font-bold py-2 px-4 rounded-lg shadow transition duration-300 ease-in-out'>
+            <a href='{% url 'accounts:profile-delete' user.pk %}' class='bg-red-400 hover:bg-red-500 text-white font-bold py-2 px-4 rounded-lg shadow transition duration-300 ease-in-out'>
                 Delete
             </a>
         </div>
@@ -35,7 +25,7 @@
         <div class='flex-1'>
             <h2 class='text-xl font-semibold text-gray-800 mb-4'>Profile Details</h2>
             <p class='text-gray-700 mb-2'><strong>Username:</strong> {{ request.user.username }}</p>
-            <p class='text-gray-700 mb-2'><strong>Full Name:</strong> {{ profile.get_fullname }}</p>
+            <p class='text-gray-700 mb-2'><strong>Full Name:</strong> {{ request.user.get_full_name }}</p>
             <p class='text-gray-700 mb-2'><strong>Email:</strong> {{ request.user.email }}</p>
             <p class='text-gray-700 mb-2'><strong>Date of birth:</strong> {{ profile.date_of_birth|date:'M d, Y' }}</p>
         </div>
