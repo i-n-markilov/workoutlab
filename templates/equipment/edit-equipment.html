@@ -10,11 +10,15 @@
     <h1 class='text-3xl font-bold text-gray-900 mb-10'>Edit Equipment</h1>
 
     <div class='bg-white p-6 rounded-lg shadow-md'>
-        <form method='post' novalidate>
+        <form method='post' enctype='multipart/form-data' novalidate>
             {% csrf_token %}
             {% for field in form %}
                 <div class='mb-4'>
-                    {{ field|as_crispy_field }}
+                    {% if field.name == 'image' %}
+                        {% include 'shared/image-upload.html' %}
+                    {% else %}
+                        {{ field|as_crispy_field }}
+                    {% endif %}
                 </div>
             {% endfor %}
             <div class='mt-6 flex justify-end'>

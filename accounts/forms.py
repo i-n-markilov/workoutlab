@@ -29,8 +29,8 @@ class ProfileForm(forms.ModelForm):
             'first_name': "First name:",
             'last_name': "Last name:",
             'date_of_birth': "Date of Birth:",
-            'profile_picture': "Profile picture:",
         }
+
     def save(self, commit= True):
         profile = super().save(commit=False)
         if 'first_name' in self.cleaned_data:

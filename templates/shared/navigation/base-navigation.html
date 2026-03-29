@@ -2,7 +2,7 @@
 <nav class='bg-gray-800 p-4'>
     <div class='container mx-auto flex justify-between items-center'>
         <a href='/' class='flex items-center'>
-          <img src='{% static 'images/wl-logo.png' %}' alt='WorkoutLab Logo' class='h-10 w-10 mr-2 rounded-lg'>
+          <img src='{{ CLOUDINARY_LOGO }}' alt='WorkoutLab Logo' class='h-10 w-10 mr-2 rounded-lg'>
           <span class='text-white text-2xl font-bold'>WorkoutLab</span>
         </a>
 
@@ -14,18 +14,6 @@
                 {% include 'shared/navigation/element-workout.html' %}
             {% endblock %}
             {% block auth %}
-{#                {% if user.is_authenticated %}#}
-{#                    <form method="post" action="{% url 'accounts:logout' %}" class="inline">#}
-{#                        {% csrf_token %}#}
-{#                        <button type="submit"#}
-{#                            class="text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium">#}
-{#                            Logout#}
-{#                        </button>#}
-{#                    </form>#}
-{#                {% else %}#}
-{#                    <a href='/accounts/login/' class='text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium'>Login</a>#}
-{#                    <a href='/accounts/register/' class='text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium'>Register</a>#}
-{#                {% endif %}#}
                 {% include 'shared/navigation/element-user.html' %}
             {% endblock %}
         </div>

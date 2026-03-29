@@ -1,3 +1,4 @@
+from cloudinary.models import CloudinaryField
 from django.contrib.auth.models import PermissionsMixin, AbstractUser
 from django.db import models
 
@@ -35,6 +36,3 @@ class Profile(models.Model):
 
     date_of_birth = models.DateField(blank=True,
                                      null=True)
-
-    profile_pic = models.URLField(blank=True,
-                                  null=True)

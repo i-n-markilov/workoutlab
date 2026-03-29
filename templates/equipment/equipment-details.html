@@ -1,5 +1,6 @@
 {% extends 'shared/base.html' %}
 {% load static %}
+{% load cloudinary %}
 
 {% block title %}
     {{ equipment.name }} Details
@@ -39,10 +40,11 @@
         </div>
     
         <div class='flex-shrink-0 mt-4 md:mt-0'>
-            <img src='{% if equipment_item.image_url %}{{ equipment_item.image_url }}{% else %}{% static 'images/equipment-default.png' %}{% endif %}' 
-                 alt='{{ equipment_item.name }}' 
-                 class='w-48 h-48 object-contain rounded-lg shadow-md bg-gray-100'
-                 onerror='this.onerror=null;this.src="{% static 'images/equipment-default.png' %}";'>
+            {% if equipment_item.image %}
+                {% cloudinary equipment_item.image.public_id width=192 height=192 crop='fit' class='w-48 h-48 object-contain rounded-lg shadow-md bg-gray-100' %}
+            {% else %}
+                <img src='{{ CLOUDINARY_DEFAULT_EQUIPMENT }}'  width='192' height='192' class='w-48 h-48 object-contain rounded-lg shadow-md bg-gray-100' alt='Default equipment'>
+            {% endif %}
         </div>
     </div>
 {% endblock content %}

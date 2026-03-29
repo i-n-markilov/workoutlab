@@ -53,6 +53,8 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'crispy_forms',
     'crispy_tailwind',
+    'cloudinary',
+    'cloudinary_storage',
 ] + PROJECT_APPS
 
 MIDDLEWARE = [
@@ -81,6 +83,7 @@ TEMPLATES = [
                 'django.contrib.messages.context_processors.messages',
                 'common.context_processors.footer_stats',
                 'common.context_processors.footer_message',
+                'common.context_processors.cloudinary_default_images',
             ],
         },
     },
@@ -163,3 +166,10 @@ LOGOUT_REDIRECT_URL = 'accounts:login'
 LOGIN_URL = 'accounts:login'
 
 CSRF_TRUSTED_ORIGINS = [o for o in os.getenv('CSRF_TRUSTED_ORIGINS').split(',') if o]
+
+CLOUDINARY_STORAGE = {
+    'CLOUD_NAME': os.getenv('CLOUDINARY_CLOUD_NAME'),
+    'API_KEY': os.getenv('CLOUDINARY_API_KEY'),
+    'API_SECRET': os.getenv('CLOUDINARY_API_SECRET'),
+}
+DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'

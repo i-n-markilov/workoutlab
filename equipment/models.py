@@ -1,3 +1,4 @@
+from cloudinary.models import CloudinaryField
 from django.contrib.auth import get_user_model
 from django.contrib.auth.models import User
 from django.db import models
@@ -18,8 +19,9 @@ class Equipment(TimeStampedModel, NameSlugModel):
     description = models.TextField(null=True,
                                    blank=True,)
 
-    image_url = models.URLField(null=True,
-                                blank=True,)
+    image = CloudinaryField('image',
+                            null=True,
+                            blank=True)
 
     type = models.CharField(max_length=100,
                             choices=TypeChoices.choices,)
