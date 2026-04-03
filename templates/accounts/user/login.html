@@ -16,9 +16,19 @@
 
             <form method='post' novalidate>
                 {% csrf_token %}
+
+                {% if form.non_field_errors %}
+                    <div class="mb-4 text-red-500 text-sm">
+                    {% for error in form.non_field_errors %}
+                        <p>{{ error }}</p>
+                    {% endfor %}
+                    </div>
+                {% endif %}
+
                 {% for field in form %}
                     <div class='mb-4'>
                         {{ field|as_crispy_field }}
+                        {{ field.errors }}
                     </div>
                 {% endfor %}
                 <div class='mt-6'>

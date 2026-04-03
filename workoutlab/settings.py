@@ -55,6 +55,7 @@ INSTALLED_APPS = [
     'crispy_tailwind',
     'cloudinary',
     'cloudinary_storage',
+    'widget_tweaks',
 ] + PROJECT_APPS
 
 MIDDLEWARE = [
@@ -156,7 +157,6 @@ STORAGES = {
 }
 
 CRISPY_ALLOWED_TEMPLATE_PACKS = 'tailwind'
-
 CRISPY_TEMPLATE_PACK = 'tailwind'
 
 AUTH_USER_MODEL = 'accounts.AppUser'

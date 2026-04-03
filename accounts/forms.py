@@ -19,7 +19,8 @@ class ProfileForm(forms.ModelForm):
         widget=forms.DateInput(
             format='%d/%m/%Y',
             attrs={'class': 'datepicker', 'type': 'text'}),
-        label="Date of birth:",required=False)
+        label="Date of birth:",required=False,
+        help_text='Accepted formats: dd/mm/yyyy | dd.mm.yyyy | dd-mm-yyyy',)
 
     class Meta:
         model = Profile
@@ -28,7 +29,7 @@ class ProfileForm(forms.ModelForm):
         labels = {
             'first_name': "First name:",
             'last_name': "Last name:",
-            'date_of_birth': "Date of Birth:",
+            'date_of_birth': "Date of birth:",
         }
 
     def save(self, commit= True):
