@@ -1,4 +1,4 @@
-from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
 from django.shortcuts import get_object_or_404
 from django.urls import reverse, reverse_lazy
 from django.views.generic import ListView, CreateView, DetailView, DeleteView, UpdateView
@@ -8,10 +8,12 @@ from exercise.models import Exercise
 
 MODEL = Exercise
 
-class ExerciseCreateView(LoginRequiredMixin, CreateView):
+class ExerciseCreateView(LoginRequiredMixin, PermissionRequiredMixin, CreateView):
     template_name = 'exercise/add-exercise.html'
     model = MODEL
     form_class = ExerciseCreateForm
+
+    permission_required = 'exercise.add_exercise'
 
     def get_success_url(self):
         return reverse('exercise:details', kwargs={'pk': self.object.pk, 'slug': self.object.slug})

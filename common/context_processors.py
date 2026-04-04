@@ -22,8 +22,9 @@ def footer_message(request):
 
 def cloudinary_default_images(request):
     return {
-        'CLOUDINARY_404': 'https://res.cloudinary.com/dj9ttpawg/image/upload/v1774791555/404_cqjcp4.png',
         'CLOUDINARY_DEFAULT_EQUIPMENT': 'https://res.cloudinary.com/dj9ttpawg/image/upload/v1774791555/equipment-default_xnq318.png',
         'CLOUDINARY_LOGO': 'https://res.cloudinary.com/dj9ttpawg/image/upload/v1774791556/wl-logo_trv3ig.png',
-        'CLOUDINARY_ICON': 'https://res.cloudinary.com/dj9ttpawg/image/upload/v1774791555/wl-icon-no-bg_srrlzq.png'
+        'CLOUDINARY_ICON': 'https://res.cloudinary.com/dj9ttpawg/image/upload/v1774791555/wl-icon-no-bg_srrlzq.png',
+        'CLOUDINARY_403': 'https://res.cloudinary.com/dj9ttpawg/image/upload/v1775304795/403_o0aezk.png',
+        'CLOUDINARY_404': 'https://res.cloudinary.com/dj9ttpawg/image/upload/v1774791555/404_cqjcp4.png',
     }

@@ -17,4 +17,3 @@ def home(request: HttpRequest) -> HttpResponse:
                'last_workout_plan': last_workout_plan}
 
     return render(request, 'common/home-page.html', context)
-

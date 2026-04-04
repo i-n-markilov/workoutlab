@@ -1,4 +1,4 @@
-from django.contrib.auth.decorators import login_required
+from django.contrib.auth.decorators import login_required, permission_required
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.http import HttpRequest, HttpResponse
 from django.shortcuts import render, redirect, get_object_or_404
@@ -12,6 +12,7 @@ from workout.models import WorkoutPlan
 MODEL = WorkoutPlan
 
 @login_required
+@permission_required('workout.add_workoutplan', raise_exception=True)
 def add_workout(request: HttpRequest) -> HttpResponse:
     if request.method == "POST":
         workout_form = WorkoutPlanCreateForm(request.POST)

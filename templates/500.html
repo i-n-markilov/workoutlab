@@ -3,13 +3,14 @@
 {% load cloudinary %}
 
 {% block title %}
-    404 - Page Not Found
+    500 - Server Error
 {% endblock %}
 
 {% block content %}
     <div class="text-center py-5">
-        <img src='{{ CLOUDINARY_404 }}' alt='404' class='mx-auto h-60 w-auto rounded-lg'>
-        <p class="text-xl text-gray-700 font-bold mb-8">Oops! The page you're looking for doesn't exist.</p>
+        <img src="https://res.cloudinary.com/dj9ttpawg/image/upload/v1775311706/500_zpqgtx.png" alt="500" class="mx-auto h-60 w-auto rounded-lg">
+        <p class="text-xl text-gray-700 font-bold mb-8">Oh no! It looks like something broke!</p>
+        <p class="text-xl text-gray-700 mb-8">Rest assured! We are working on fixing it as fast as possible!</p>
         <a href="/" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-8 rounded-full shadow-lg transition duration-300 ease-in-out transform hover:scale-105">
             Go to Homepage
         </a>

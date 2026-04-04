@@ -1,4 +1,4 @@
-from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
 from django.shortcuts import get_object_or_404
 from django.urls import reverse_lazy, reverse
 from django.views.generic import ListView, CreateView, DetailView, UpdateView, DeleteView
@@ -8,10 +8,12 @@ from equipment.models import Equipment
 
 MODEL = Equipment
 
-class EquipmentCreateView(LoginRequiredMixin, CreateView):
+class EquipmentCreateView(LoginRequiredMixin, PermissionRequiredMixin, CreateView):
     template_name = 'equipment/add-equipment.html'
     model = MODEL
     form_class = EquipmentCreateForm
+
+    permission_required = 'equipment.add_equipment'
 
     def get_success_url(self):
         return reverse('equipment:details', kwargs={'pk': self.object.pk, 'slug': self.object.slug})

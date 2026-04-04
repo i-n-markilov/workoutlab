@@ -3,13 +3,13 @@
 {% load cloudinary %}
 
 {% block title %}
-    404 - Page Not Found
+    403 - Forbidden
 {% endblock %}
 
 {% block content %}
     <div class="text-center py-5">
-        <img src='{{ CLOUDINARY_404 }}' alt='404' class='mx-auto h-60 w-auto rounded-lg'>
-        <p class="text-xl text-gray-700 font-bold mb-8">Oops! The page you're looking for doesn't exist.</p>
+        <img src='{{ CLOUDINARY_403 }}' alt='403' class='mx-auto h-60 w-auto rounded-lg'>
+        <p class="text-xl text-gray-700 font-bold mb-8">Oops! It seems that you can't access this.</p>
         <a href="/" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-8 rounded-full shadow-lg transition duration-300 ease-in-out transform hover:scale-105">
             Go to Homepage
         </a>
