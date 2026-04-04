@@ -2,7 +2,6 @@
 # More GitHub Actions for Azure: https://github.com/Azure/actions
 # More info on Python, GitHub Actions, and Azure App Service: https://aka.ms/python-webapps-actions
 
-
 name: Build and deploy Python app to Azure Web App - workoutlab
 
 on:
@@ -47,11 +46,6 @@ jobs:
         run: |
           source antenv/bin/activate
           python manage.py collectstatic --noinput
-
-      - name: Apply migrations
-        run: |
-          source antenv/bin/activate
-          python manage.py migrate --noinput
                 
       # By default, when you enable GitHub CI/CD integration through the Azure portal, the platform automatically sets the SCM_DO_BUILD_DURING_DEPLOYMENT application setting to true. This triggers the use of Oryx, a build engine that handles application compilation and dependency installation (e.g., pip install) directly on the platform during deployment. Hence, we exclude the antenv virtual environment directory from the deployment artifact to reduce the payload size. 
       - name: Upload artifact for deployment jobs
