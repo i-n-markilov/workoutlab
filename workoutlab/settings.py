@@ -56,6 +56,7 @@ INSTALLED_APPS = [
     'cloudinary_storage',
     'widget_tweaks',
     'rest_framework',
+    'background_task'
 ] + PROJECT_APPS
 
 MIDDLEWARE = [
