@@ -1,6 +1,7 @@
 {% extends 'shared/base.html' %}
 {% load static %}
 {% load cloudinary %}
+{% load group_filter %}
 
 {% block title %}
     {{ equipment.name }} Details
@@ -21,7 +22,7 @@
                         {% endif %}
                     </button>
                 </form>
-                {% if not equipment_item.system_generated and equipment_item.user == request.user %}
+                {% if equipment_item.user == request.user or request.user|has_group:'Moderator' or request.user.is_staff or request.user.is_superuser%}
                     <a href='{% url 'equipment:edit' equipment_item.pk equipment_item.slug%}' class='bg-orange-300 hover:bg-orange-400 text-white font-bold py-2 px-4 rounded-lg shadow transition duration-300 ease-in-out'>
                         Edit
                     </a>

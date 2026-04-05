@@ -21,7 +21,7 @@ class ExerciseCreateForm(ExerciseFormBasic):
             'instructions': 'Provide appropriate instructions',
             'primary_muscle_group': 'Select the primary muscle group',
             'secondary_muscle_group': 'Select the secondary muscle group (if applicable)',
-            'equipment': 'Select equipment that can be used for this exercise (up to 3 items). Multi-select: Ctrl + click',
+            'equipment': 'Select equipment that can be used for this exercise. Multi-select: Ctrl + click',
             'is_bodyweight': 'Mark if exercise uses only body weight',
         }
         widgets = {
