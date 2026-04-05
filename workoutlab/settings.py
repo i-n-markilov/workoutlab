@@ -55,6 +55,7 @@ INSTALLED_APPS = [
     'cloudinary',
     'cloudinary_storage',
     'widget_tweaks',
+    'rest_framework',
 ] + PROJECT_APPS
 
 MIDDLEWARE = [
