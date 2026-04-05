@@ -2,7 +2,7 @@ from django.db.models.signals import post_save, post_migrate
 from django.dispatch import receiver
 from django.contrib.auth import get_user_model
 
-from accounts.tasks import send_welcome_email
+from accounts.utils.email import send_welcome_email_async
 
 UserModel = get_user_model()
 
@@ -49,7 +49,7 @@ def create_profile_and_assign_group(sender, instance, created, **kwargs):
     from django.contrib.auth.models import Group
 
     Profile.objects.get_or_create(user=instance)
-    send_welcome_email.delay(instance.email)
+    send_welcome_email_async(instance.email)
 
     try:
         user_group = Group.objects.get(name="User")
