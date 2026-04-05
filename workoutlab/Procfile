@@ -1,0 +1,2 @@
+web: gunicorn workoutlab.wsgi
+worker: python manage.py process_tasks
