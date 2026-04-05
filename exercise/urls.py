@@ -7,6 +7,7 @@ exercise_patterns =[
     path('', views.ExerciseDetailView.as_view(), name='details'),
     path('edit/', views.ExerciseEditView.as_view(), name='edit'),
     path('delete/', views.ExerciseDeleteView.as_view(), name='delete'),
+    path('favourite/', views.ExerciseAddRemoveFavourite.as_view(), name='favourite'),
 ]
 
 urlpatterns = [

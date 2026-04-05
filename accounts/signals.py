@@ -2,7 +2,7 @@ from django.db.models.signals import post_save, post_migrate
 from django.dispatch import receiver
 from django.contrib.auth import get_user_model
 
-from accounts.utils.email import send_welcome_email_async
+from accounts.email import send_welcome_email_async
 
 UserModel = get_user_model()
 

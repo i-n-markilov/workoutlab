@@ -31,7 +31,7 @@ DEBUG = os.environ.get("DEBUG", "False") == "True"
 
 ALLOWED_HOSTS = [host for host in os.getenv('ALLOWED_HOSTS', '').split(',') if host]
 
-
+AUTH_USER_MODEL = 'accounts.AppUser'
 
 # Application definition
 PROJECT_APPS = [
@@ -40,7 +40,6 @@ PROJECT_APPS = [
     'equipment',
     'exercise',
     'workout',
-
 ]
 
 
@@ -159,7 +158,7 @@ STORAGES = {
 CRISPY_ALLOWED_TEMPLATE_PACKS = 'tailwind'
 CRISPY_TEMPLATE_PACK = 'tailwind'
 
-AUTH_USER_MODEL = 'accounts.AppUser'
+
 
 LOGIN_REDIRECT_URL = 'common:home'
 LOGOUT_REDIRECT_URL = 'accounts:login'

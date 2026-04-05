@@ -7,73 +7,85 @@
 {% endblock %}
 
 {% block content %}
-<div class='flex justify-between items-center mb-10'>
-    <h1 class='text-3xl font-bold text-gray-900'>{{ workout_plan.name }}</h1>
-    {%  if user.is_authenticated and not workout_plan.system_generated and workout_plan.user == request.user %}
-        <div class='flex space-x-2'>
-            <a href='{% url 'workout:edit' workout_plan.pk workout_plan.slug %}' class='bg-orange-300 hover:bg-orange-400 text-white font-bold py-2 px-4 rounded-lg shadow transition duration-300 ease-in-out'>
-                Edit
-            </a>
-            <a href='{% url 'workout:delete' workout_plan.pk workout_plan.slug %}' class='bg-red-400 hover:bg-red-500 text-white font-bold py-2 px-4 rounded-lg shadow transition duration-300 ease-in-out'>
-                Delete
-            </a>
-        </div>
-    {% endif %}
-</div>
-
-<div class='bg-white p-6 rounded-lg shadow-md'>
-    <h2 class='text-xl font-semibold text-gray-800 mb-4'>Details</h2>
-
-    <p class='text-gray-700 mb-2'><strong>Name:</strong> {{ workout_plan.name }}</p>
-    <p class='text-gray-700 mb-2'><strong>Notes:</strong> {{ workout_plan.notes }}</p>
-    <p class='text-gray-700 mb-2'><strong>Added by:</strong>
-        {% if workout_plan.system_generated %}
-            System
-        {% else %}
-            {{ workout_plan.user.username }}
+    <div class='flex justify-between items-center mb-10'>
+        <h1 class='text-3xl font-bold text-gray-900'>{{ workout_plan.name }}</h1>
+        {% if user.is_authenticated %}
+            <div class='flex space-x-2'>
+                <form method='post' action='{% url 'workout:favourite' workout_plan.pk workout_plan.slug %}'>
+                    {% csrf_token %}
+                    <button type='submit' class='bg-purple-600 hover:bg-purple-700 text-white font-bold py-2 px-4 rounded-lg shadow transition duration-300 ease-in-out'>
+                        {% if workout_plan in user.profile.favourite_workoutplans.all %}
+                            Remove from favourites
+                        {% else %}
+                            Add to favourites
+                        {% endif %}
+                    </button>
+                </form>
+                {% if not workout_plan.system_generated and workout_plan.user == request.user %}
+                    <a href='{% url 'workout:edit' workout_plan.pk workout_plan.slug %}' class='bg-orange-300 hover:bg-orange-400 text-white font-bold py-2 px-4 rounded-lg shadow transition duration-300 ease-in-out'>
+                        Edit
+                    </a>
+                    <a href='{% url 'workout:delete' workout_plan.pk workout_plan.slug %}' class='bg-red-400 hover:bg-red-500 text-white font-bold py-2 px-4 rounded-lg shadow transition duration-300 ease-in-out'>
+                        Delete
+                    </a>
+                {% endif %}
+            </div>
         {% endif %}
-    </p>
-    <p class='text-gray-700 mb-2'><strong>Added:</strong> {{ workout_plan.created|date:'M d, Y' }}</p>
-    <p class='text-gray-700 mb-2'><strong>Last Updated:</strong> {{ workout_plan.modified|date:'M d, Y' }}</p>
+    </div>
+
+    <div class='bg-white p-6 rounded-lg shadow-md'>
+        <h2 class='text-xl font-semibold text-gray-800 mb-4'>Details</h2>
+
+        <p class='text-gray-700 mb-2'><strong>Name:</strong> {{ workout_plan.name }}</p>
+        <p class='text-gray-700 mb-2'><strong>Notes:</strong> {{ workout_plan.notes }}</p>
+        <p class='text-gray-700 mb-2'><strong>Added by:</strong>
+            {% if workout_plan.system_generated %}
+                System
+            {% else %}
+                {{ workout_plan.user.username }}
+            {% endif %}
+        </p>
+        <p class='text-gray-700 mb-2'><strong>Added:</strong> {{ workout_plan.created|date:'M d, Y' }}</p>
+        <p class='text-gray-700 mb-2'><strong>Last Updated:</strong> {{ workout_plan.modified|date:'M d, Y' }}</p>
 
 
-    {% if workout_plan.items.all %}
-        <div class="overflow-x-auto">
-            <table class="min-w-full border border-gray-200 rounded-lg">
-                <thead class="bg-gray-100">
-                    <tr>
-                        <th class="px-4 py-2 text-left">Exercise</th>
-                        <th class="px-4 py-2 text-left">Order</th>
-                        <th class="px-4 py-2 text-left">Sets</th>
-                        <th class="px-4 py-2 text-left">Reps</th>
-                        <th class="px-4 py-2 text-left">Duration (s)</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for we in workout_plan.items.all %}
-                        <tr class="border-b hover:bg-gray-50">
-                            <td class="px-2 py-1">
-                                <a href='{% url 'exercise:details' we.exercise.pk we.exercise.slug %}' class='inline-block bg-gray-200 rounded-lg px-3 py-1 text-sm font-semibold text-gray-700 mr-2 mb-2'>
-                                    {{ we.exercise.name }}
-                                </a>
-                            </td>
-                            <td class="px-2 py-1">{{ we.order }}</td>
-                            <td class="px-2 py-1">{{ we.sets }}</td>
-                            <td class="px-2 py-1">{{ we.reps}}</td>
-                            <td class="px-2 py-1">
-                                {% if we.duration_seconds %}
-                                {{ we.duration_seconds }}
-                                {% else %}
-                                    -
-                                {% endif %}
-                            </td>
+        {% if workout_plan.items.all %}
+            <div class="overflow-x-auto">
+                <table class="min-w-full border border-gray-200 rounded-lg">
+                    <thead class="bg-gray-100">
+                        <tr>
+                            <th class="px-4 py-2 text-left">Exercise</th>
+                            <th class="px-4 py-2 text-left">Order</th>
+                            <th class="px-4 py-2 text-left">Sets</th>
+                            <th class="px-4 py-2 text-left">Reps</th>
+                            <th class="px-4 py-2 text-left">Duration (s)</th>
                         </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
-        </div>
-    {% else %}
-        <p class='text-gray-600 mt-4'>No exercises added to this workout plan yet.</p>
-    {% endif %}
-</div>
+                    </thead>
+                    <tbody>
+                        {% for we in workout_plan.items.all %}
+                            <tr class="border-b hover:bg-gray-50">
+                                <td class="px-2 py-1">
+                                    <a href='{% url 'exercise:details' we.exercise.pk we.exercise.slug %}' class='inline-block bg-gray-200 rounded-lg px-3 py-1 text-sm font-semibold text-gray-700 mr-2 mb-2'>
+                                        {{ we.exercise.name }}
+                                    </a>
+                                </td>
+                                <td class="px-2 py-1">{{ we.order }}</td>
+                                <td class="px-2 py-1">{{ we.sets }}</td>
+                                <td class="px-2 py-1">{{ we.reps}}</td>
+                                <td class="px-2 py-1">
+                                    {% if we.duration_seconds %}
+                                    {{ we.duration_seconds }}
+                                    {% else %}
+                                        -
+                                    {% endif %}
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        {% else %}
+            <p class='text-gray-600 mt-4'>No exercises added to this workout plan yet.</p>
+        {% endif %}
+    </div>
 {% endblock content %}

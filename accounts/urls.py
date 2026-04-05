@@ -1,7 +1,7 @@
 from django.contrib.auth.views import LoginView, LogoutView, PasswordChangeView, PasswordChangeDoneView
 from django.urls import path, include, reverse_lazy
 
-from accounts.views import RegisterUserView, ProfileDetailsView, ProfileUpdateView, ProfileDeleteView
+from accounts.views import RegisterUserView, ProfileDetailsView, ProfileUpdateView, ProfileDeleteView, FavouritesView
 
 app_name = 'accounts'
 
@@ -9,6 +9,7 @@ profile_patterns = [
     path('details/', ProfileDetailsView.as_view(), name='profile'),
     path('edit/', ProfileUpdateView.as_view(), name='profile-edit'),
     path('delete/', ProfileDeleteView.as_view(), name='profile-delete'),
+    path('favourites/', FavouritesView.as_view(), name='favourites'),
 ]
 
 auth_patterns = [

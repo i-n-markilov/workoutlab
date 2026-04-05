@@ -4,6 +4,7 @@ from django.http import HttpRequest, HttpResponse
 from django.shortcuts import render, redirect, get_object_or_404
 from django.urls import reverse_lazy
 from django.utils.text import slugify
+from django.views import View
 from django.views.generic import ListView, DetailView, DeleteView
 
 from workout.forms import WorkoutPlanEditForm, WorkoutPlanCreateForm, dynamic_workout_formset, WorkoutPlanSearchForm
@@ -111,3 +112,15 @@ class WorkoutPlanDetailView(DetailView):
         if queryset is None:
             queryset = self.get_queryset()
         return get_object_or_404(queryset, pk=self.kwargs['pk'], slug=self.kwargs['slug'])
+
+class WorkoutplanAddRemoveFavourite(LoginRequiredMixin, View):
+    def post(self, request, pk, slug):
+        workoutplan = get_object_or_404(WorkoutPlan, pk=pk, slug=slug)
+        profile = request.user.profile
+
+        if profile.favourite_workoutplans.filter(pk=pk).exists():
+            profile.favourite_workoutplans.remove(workoutplan)
+        else:
+            profile.favourite_workoutplans.add(workoutplan)
+
+        return redirect(request.META.get('HTTP_REFERER', '/'))

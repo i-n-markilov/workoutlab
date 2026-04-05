@@ -7,6 +7,7 @@ equipment_patterns =[
     path('', views.EquipmentDetailView.as_view(), name='details'),
     path('edit/', views.EquipmentEditView.as_view(), name='edit'),
     path('delete/', views.EquipmentDeleteView.as_view(), name='delete'),
+    path('favourite/', views.EquipmentAddRemoveFavourite.as_view(), name='favourite'),
 ]
 
 urlpatterns = [

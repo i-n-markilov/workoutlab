@@ -9,14 +9,26 @@
 {% block content %}
     <div class='flex justify-between items-center mb-10'>
         <h1 class='text-3xl font-bold text-gray-900'>{{ exercise.name }}</h1>
-        {%  if user.is_authenticated and not exercise.system_generated and exercise.user == request.user %}
+        {% if user.is_authenticated %}
             <div class='flex space-x-2'>
-                <a href='{% url 'exercise:edit' exercise.pk exercise.slug %}' class='bg-orange-300 hover:bg-orange-400 text-white font-bold py-2 px-4 rounded-lg shadow transition duration-300 ease-in-out'>
-                    Edit
-                </a>
-                <a href='{% url 'exercise:delete' exercise.pk exercise.slug %}' class='bg-red-400 hover:bg-red-500 text-white font-bold py-2 px-4 rounded-lg shadow transition duration-300 ease-in-out'>
-                    Delete
-                </a>
+                <form method='post' action='{% url 'exercise:favourite' exercise.pk exercise.slug %}'>
+                    {% csrf_token %}
+                    <button type='submit' class='bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-4 rounded-lg shadow transition duration-300 ease-in-out'>
+                        {% if exercise in user.profile.favourite_exercises.all %}
+                            Remove from favourites
+                        {% else %}
+                            Add to favourites
+                        {% endif %}
+                    </button>
+                </form>
+                {% if not exercise.system_generated and exercise.user == request.user %}
+                    <a href='{% url 'exercise:edit' exercise.pk exercise.slug %}' class='bg-orange-300 hover:bg-orange-400 text-white font-bold py-2 px-4 rounded-lg shadow transition duration-300 ease-in-out'>
+                        Edit
+                    </a>
+                    <a href='{% url 'exercise:delete' exercise.pk exercise.slug %}' class='bg-red-400 hover:bg-red-500 text-white font-bold py-2 px-4 rounded-lg shadow transition duration-300 ease-in-out'>
+                        Delete
+                    </a>
+                {% endif %}
             </div>
         {% endif %}
     </div>

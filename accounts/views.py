@@ -2,7 +2,7 @@ from django.contrib.auth import get_user_model, logout
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.shortcuts import redirect
 from django.urls import reverse_lazy, reverse
-from django.views.generic import CreateView, UpdateView, DetailView, DeleteView
+from django.views.generic import CreateView, UpdateView, DetailView, DeleteView, TemplateView
 from accounts.forms import AppUserCreationForm, ProfileForm
 from accounts.models import Profile
 
@@ -43,3 +43,14 @@ class ProfileDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
         logout(self.request)
         user.delete()
         return redirect(success_url)
+
+class FavouritesView(LoginRequiredMixin, TemplateView):
+    template_name = 'accounts/profile/favourites.html'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        profile = self.request.user.profile
+        context['favourite_equipments'] = profile.favourite_equipments.all()
+        context['favourite_exercises'] = profile.favourite_exercises.all()
+        context['favourite_workouts'] = profile.favourite_workoutplans.all()
+        return context

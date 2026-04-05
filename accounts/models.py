@@ -1,4 +1,3 @@
-from cloudinary.models import CloudinaryField
 from django.contrib.auth.models import PermissionsMixin, AbstractUser
 from django.db import models
 
@@ -21,6 +20,11 @@ class AppUser(AbstractUser, PermissionsMixin):
     def __str__(self):
         return self.username
 
+#imports for those models are here because Django imports them before finding the AppUser
+from equipment.models import Equipment
+from exercise.models import Exercise
+from workout.models import WorkoutPlan
+
 class Profile(models.Model):
     user = models.OneToOneField(AppUser,
                                 on_delete=models.CASCADE,
@@ -36,3 +40,15 @@ class Profile(models.Model):
 
     date_of_birth = models.DateField(blank=True,
                                      null=True)
+
+    favourite_equipments = models.ManyToManyField(Equipment,
+                                                 blank=True,
+                                                 related_name='user_favourite')
+
+    favourite_exercises = models.ManyToManyField(Exercise,
+                                                 blank=True,
+                                                 related_name='user_favourite')
+
+    favourite_workoutplans = models.ManyToManyField(WorkoutPlan,
+                                                   blank=True,
+                                                   related_name='user_favourite')

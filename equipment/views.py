@@ -1,8 +1,10 @@
 from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
-from django.shortcuts import get_object_or_404
+from django.shortcuts import get_object_or_404, redirect
 from django.urls import reverse_lazy, reverse
+from django.views import View
 from django.views.generic import ListView, CreateView, DetailView, UpdateView, DeleteView
 
+import equipment
 from equipment.forms import EquipmentCreateForm, EquipmentEditForm, EquipmentSearchForm
 from equipment.models import Equipment
 
@@ -87,3 +89,15 @@ class EquipmentDetailView(DetailView):
         if queryset is None:
             queryset = self.get_queryset()
         return get_object_or_404(queryset, pk=self.kwargs['pk'], slug=self.kwargs['slug'])
+
+class EquipmentAddRemoveFavourite(LoginRequiredMixin, View):
+    def post(self, request, pk, slug):
+        equipment = get_object_or_404(Equipment, pk=pk, slug=slug)
+        profile = request.user.profile
+
+        if profile.favourite_equipments.filter(pk=pk).exists():
+            profile.favourite_equipments.remove(equipment)
+        else:
+            profile.favourite_equipments.add(equipment)
+
+        return redirect(request.META.get('HTTP_REFERER', '/'))

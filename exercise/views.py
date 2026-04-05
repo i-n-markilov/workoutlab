@@ -1,6 +1,7 @@
 from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
-from django.shortcuts import get_object_or_404
+from django.shortcuts import get_object_or_404, redirect
 from django.urls import reverse, reverse_lazy
+from django.views import View
 from django.views.generic import ListView, CreateView, DetailView, DeleteView, UpdateView
 
 from exercise.forms import ExerciseCreateForm, ExerciseEditForm, ExerciseSearchForm
@@ -97,3 +98,15 @@ class ExerciseDetailView(DetailView):
         if queryset is None:
             queryset = self.get_queryset()
         return get_object_or_404(queryset, pk=self.kwargs['pk'], slug=self.kwargs['slug'])
+
+class ExerciseAddRemoveFavourite(LoginRequiredMixin, View):
+    def post(self, request, pk, slug):
+        exercise = get_object_or_404(Exercise, pk=pk, slug=slug)
+        profile = request.user.profile
+
+        if profile.favourite_exercises.filter(pk=pk).exists():
+            profile.favourite_exercises.remove(exercise)
+        else:
+            profile.favourite_exercises.add(exercise)
+
+        return redirect(request.META.get('HTTP_REFERER', '/'))
