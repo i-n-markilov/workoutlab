@@ -23,11 +23,12 @@ Currently hosted on : Azure
 - **Exercise Database**: Explore exercises categorized by difficulty level (via custom template tags), primary muscle group, and required equipment.
 - **Equipment Management**: Track gym gear and categorize by type.
 - **REST API**: Provides endpoints for integrating workout and equipment data with third-party clients, built with Django REST Framework.
-- **Asynchronous Tasks**: Background task processing for email notifications and user onboarding, using Celery WebJob ('Welcome!' emails go to spam!)
 - **Automated Profiles**: User profiles are automatically created and managed via Django signals.
 - **Modern UI**: Responsive design built with Tailwind CSS.
 - **Cloud Storage**: Media assets managed via Cloudinary.
 - **Predefined Data**: Variety of exercises and equipment available out-of-the-box via data migrations.
+- - !!! Issues Redis cache on Azure. Webjob for Celery can't connect to redis cache and freezes when user registers. Functionality works on local setup (files are present, but commented out)
+- **Asynchronous Tasks**: Background task processing for email notifications and user onboarding, using Celery WebJob ('Welcome!' emails go to spam!)
 
 ## 🛠️ Tech Stack
 

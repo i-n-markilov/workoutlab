@@ -49,8 +49,8 @@ def create_profile_and_assign_group(sender, instance, created, **kwargs):
     from django.contrib.auth.models import Group
 
     Profile.objects.get_or_create(user=instance)
-    send_welcome_email.delay(instance.email)
-
+    # send_welcome_email.delay(instance.email)
+    # issues with setting redis cache on azure. webjob can't run
     try:
         user_group = Group.objects.get(name="User")
         instance.groups.add(user_group)
