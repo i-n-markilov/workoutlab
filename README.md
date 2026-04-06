@@ -23,7 +23,7 @@ Currently hosted on : Azure
 - **Exercise Database**: Explore exercises categorized by difficulty level (via custom template tags), primary muscle group, and required equipment.
 - **Equipment Management**: Track gym gear and categorize by type.
 - **REST API**: Provides endpoints for integrating workout and equipment data with third-party clients, built with Django REST Framework.
-- **Asynchronous Tasks**: Background task processing for email notifications and user onboarding, using Celery WebJob
+- **Asynchronous Tasks**: Background task processing for email notifications and user onboarding, using Celery WebJob ('Welcome!' emails go to spam!)
 - **Automated Profiles**: User profiles are automatically created and managed via Django signals.
 - **Modern UI**: Responsive design built with Tailwind CSS.
 - **Cloud Storage**: Media assets managed via Cloudinary.
